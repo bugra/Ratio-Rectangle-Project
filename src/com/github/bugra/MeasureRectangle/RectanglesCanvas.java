@@ -91,6 +91,6 @@ class RectanglesCanvas extends Canvas {
             g2D.setColor(Color.green);
             g2D.fill(rec4);
             g2D.setColor(Color.red);
-            g2D.fill(rec5);
+            //g2D.fill(rec5);
         }
     }
