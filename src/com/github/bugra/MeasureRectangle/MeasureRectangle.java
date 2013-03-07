@@ -1,13 +1,11 @@
 package com.github.bugra.MeasureRectangle;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 
 import javax.swing.JApplet;
 import javax.swing.JLabel;
@@ -24,6 +22,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 
+@SuppressWarnings("serial")
 public class MeasureRectangle extends JApplet {
     RectanglesCanvas canvas;
     
@@ -38,6 +37,10 @@ public class MeasureRectangle extends JApplet {
     JTextField topRectangleMeasure;
     JTextField bottomRectangleMeasure;
     
+    // TODO Ratio of Rectangle Measures
+    private int topRectangleValue = 10;
+    private int bottomRectangleValue = 10;
+    
     private final int MIN_SLIDER = 0;
     private final int MAX_SLIDER = 100;
     private final int INITIAL_SLIDER = 10;
@@ -45,11 +48,9 @@ public class MeasureRectangle extends JApplet {
     private final int INITIAL_WIDTH = 800;
     private final int INITIAL_HEIGHT = 600;
     
-    private int canvasWidth;
-    private int canvasHeight;
     
-    private ComponentListener l;
-    float alphaValue = 0.65f;
+    // Initial value of sliders
+    double tempWidth = 0.5;
 
     public void init() {
 
@@ -126,7 +127,7 @@ public class MeasureRectangle extends JApplet {
         	  }
         	  public void removeUpdate(DocumentEvent e) {
         		  System.out.println(Integer.parseInt(topRectangleMeasure.getText()));  
-        		  //warn();
+        		  warn();
         	  }
         	  public void insertUpdate(DocumentEvent e) {
         		  System.out.println(Integer.parseInt(topRectangleMeasure.getText()));  
@@ -151,7 +152,7 @@ public class MeasureRectangle extends JApplet {
         	  }
         	  public void removeUpdate(DocumentEvent e) {
         		  System.out.println(Integer.parseInt(bottomRectangleMeasure.getText()));  
-        		  //warn();
+        		  warn();
         	  }
         	  public void insertUpdate(DocumentEvent e) {
         		  System.out.println(Integer.parseInt(bottomRectangleMeasure.getText()));  
@@ -187,8 +188,8 @@ public class MeasureRectangle extends JApplet {
         
         this.addComponentListener(new ComponentAdapter() {
         	  public void componentResized(ComponentEvent event) {
-        		 System.out.println(canvas.getSize());
         	     canvas.setSizeCanvas(canvas.getSize());
+        	     
         	  }
         	});
     }
@@ -196,8 +197,13 @@ public class MeasureRectangle extends JApplet {
     class SliderListener implements ChangeListener {
         public void stateChanged(ChangeEvent e) {
             JSlider tempSlider = (JSlider) e.getSource();
-            alphaValue = (float)(tempSlider.getValue()/100.0);
-            bottomTextField.setText(Float.toString(alphaValue));
+            tempWidth = (tempSlider.getValue() / (double)MAX_SLIDER);
+            bottomTextField.setText(Double.toString(tempWidth));
+            int width = (int) ((canvas.getWidthCanvas() - 
+	 							(2 * RectanglesCanvas.posXTopRectangle)) * tempWidth);
+            
+	 		canvas.setTopRectangleWidth(width);
+	 		canvas.setBottomRectangleWidth(width);
             canvas.repaint();
         }
     }

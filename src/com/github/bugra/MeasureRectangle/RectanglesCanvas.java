@@ -12,18 +12,22 @@ import java.awt.TexturePaint;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
+@SuppressWarnings("serial")
 class RectanglesCanvas extends Canvas {
         Rectangle2D topRectangle, bottomRectangle;
         
-        private final int posXTopRectangle = 10;
+        public static final int posXTopRectangle = 10;
         private final int posYTopRectangle = 10;
         private int widthTopRectangle = 50;
         private int heightTopRectangle = 50;
         
-        private final int posXBottomRectangle = 10;
+        public static final int posXBottomRectangle = 10;
         private final int posYBottomRectangle = 160;
         private int widthBottomRectangle = 50;
         private int heightBottomRectangle = 50;
+        
+        private final int precisionSpacingBetweenRectangles = 30;
+        private int spacingBetweenRectangles = 10;
         
         private int widthCanvas;
         private int heightCanvas;
@@ -78,22 +82,6 @@ class RectanglesCanvas extends Canvas {
             big.setColor(Color.black);
             big.drawLine(0, 0, 5, 5);
             Rectangle r = new Rectangle(0, 0, 5, 5);
-
-            // Create the texture using the buffered image and rectangle.
-
-            TexturePaint tp = new TexturePaint(bi, r);
-
-            //g2D.setPaint(tp);
-            //g2D.fill(rec3);
-
-            // 18. Finally, assign different colors to the graphics
-            // context and draw the filled rectangles rectangle4 and
-            // rectangle5.
-
-            //g2D.setColor(Color.green);
-            //g2D.fill(rec4);
-            //g2D.setColor(Color.red);
-            //g2D.fill(rec5);
             
             
         }
@@ -122,8 +110,9 @@ class RectanglesCanvas extends Canvas {
         	this.setSize(d);
         	this.setHeightCanvas(d.height);
         	this.setWidthCanvas(d.width);
-        	System.out.println(heightCanvas);
-        	System.out.println(widthCanvas);
+        	// To prevent negative values
+        	spacingBetweenRectangles = Math.abs((int) (d.height / precisionSpacingBetweenRectangles));        	
+        	//paint();
         }
         
         public void setWidthCanvas(int width){
@@ -142,6 +131,14 @@ class RectanglesCanvas extends Canvas {
         
         public int getHeightCanvas(){
         	return heightCanvas;
+        }
+        
+        public void setSpacingBetweenRectangles(int spacing){
+        	spacingBetweenRectangles = spacing;
+        }
+        
+        public int getSpacingBetweenRectangles(){
+        	return spacingBetweenRectangles;
         }
         
         
