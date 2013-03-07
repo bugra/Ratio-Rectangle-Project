@@ -1,11 +1,13 @@
 package com.github.bugra.MeasureRectangle;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 
 import javax.swing.JApplet;
 import javax.swing.JLabel;
@@ -36,7 +38,17 @@ public class MeasureRectangle extends JApplet {
     JTextField topRectangleMeasure;
     JTextField bottomRectangleMeasure;
     
+    private final int MIN_SLIDER = 0;
+    private final int MAX_SLIDER = 100;
+    private final int INITIAL_SLIDER = 10;
     
+    private final int INITIAL_WIDTH = 800;
+    private final int INITIAL_HEIGHT = 600;
+    
+    private int canvasWidth;
+    private int canvasHeight;
+    
+    private ComponentListener l;
     float alphaValue = 0.65f;
 
     public void init() {
@@ -60,7 +72,8 @@ public class MeasureRectangle extends JApplet {
 
         JLabel label = new JLabel("Below Rectangle: ", JLabel.RIGHT);
 
-        JSlider bottomSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 65);
+        JSlider bottomSlider = new JSlider(JSlider.HORIZONTAL, MIN_SLIDER, 
+        									MAX_SLIDER, INITIAL_SLIDER);
         bottomSlider.addChangeListener(new SliderListener());
         
         bottomTextField = new JTextField("0.65", 4);
@@ -86,7 +99,9 @@ public class MeasureRectangle extends JApplet {
 
         JLabel topLabel = new JLabel("Above Rectangle", JLabel.RIGHT);
 
-        JSlider topSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 65);
+        JSlider topSlider = new JSlider(JSlider.HORIZONTAL, MIN_SLIDER, 
+        								MAX_SLIDER, INITIAL_SLIDER);
+        
         topSlider.addChangeListener(new SliderListener());
 
         topTextField = new JTextField("0.65", 4);
@@ -101,7 +116,6 @@ public class MeasureRectangle extends JApplet {
         topPanel.add(topBTextField);
         
         container.add(BorderLayout.NORTH, topPanel);
-        
         
         topRectangleMeasure = new JTextField();
         topRectangleMeasure.setText("10");
@@ -153,8 +167,8 @@ public class MeasureRectangle extends JApplet {
         	  }
         	});
         
-        topRectangleMeasure.setPreferredSize(new Dimension(50, 50));
-        bottomRectangleMeasure.setPreferredSize(new Dimension(50, 50));
+        topRectangleMeasure.setPreferredSize(new Dimension(10, 50));
+        bottomRectangleMeasure.setPreferredSize(new Dimension(10, 50));
         JPanel westPanel = new JPanel();
         westPanel.setPreferredSize(new Dimension(50, 50));
         TitledBorder westBorder = new TitledBorder("Ratio");
@@ -163,9 +177,22 @@ public class MeasureRectangle extends JApplet {
         westPanel.setLayout(new GridLayout(0,1));
         westPanel.add(topRectangleMeasure);
         westPanel.add(new JSeparator(SwingConstants.VERTICAL));
+        westPanel.add(new JSeparator(SwingConstants.VERTICAL));
+        westPanel.add(new JSeparator(SwingConstants.VERTICAL));
+        westPanel.add(new JSeparator(SwingConstants.VERTICAL));
+        //westPanel.add(new JSeparator(SwingConstants.VERTICAL));
         westPanel.add(bottomRectangleMeasure);        
         container.add(BorderLayout.WEST, westPanel);
+        this.setSize(INITIAL_WIDTH, INITIAL_HEIGHT);
+        
+        this.addComponentListener(new ComponentAdapter() {
+        	  public void componentResized(ComponentEvent event) {
+        		 System.out.println(canvas.getSize());
+        	     canvas.setSizeCanvas(canvas.getSize());
+        	  }
+        	});
     }
+    
     class SliderListener implements ChangeListener {
         public void stateChanged(ChangeEvent e) {
             JSlider tempSlider = (JSlider) e.getSource();
@@ -174,7 +201,5 @@ public class MeasureRectangle extends JApplet {
             canvas.repaint();
         }
     }
-    public float getAlphaValue(){
-    	return alphaValue;
-    }
+    
 }
