@@ -17,7 +17,7 @@ class RectanglesCanvas extends Canvas {
         Rectangle2D topRectangle, bottomRectangle;
         
         public static final int posXTopRectangle = 10;
-        private final int posYTopRectangle = 10;
+        public static final int posYTopRectangle = 10;
         private int widthTopRectangle = 50;
         private int heightTopRectangle = 50;
         
@@ -32,7 +32,10 @@ class RectanglesCanvas extends Canvas {
         
         private int widthCanvas;
         private int heightCanvas;
-
+        
+        private double topRectangleValue = MeasureRectangle.INITIAL_BOTTOM_RECTANGLE_VALUE;
+        private double bottomRectangleValue = MeasureRectangle.INITIAL_TOP_RECTANGLE_VALUE;
+        
         // Constructor
         RectanglesCanvas() {
 
@@ -40,8 +43,8 @@ class RectanglesCanvas extends Canvas {
 
             topRectangle = new Rectangle2D.Float(posXTopRectangle, posYTopRectangle,
             									widthTopRectangle, heightTopRectangle);
-            bottomRectangle = new Rectangle2D.Float(posXBottomRectangle, 410, 50, 50);
-            System.out.println(getHeightCanvas());
+            bottomRectangle = new Rectangle2D.Float(posXBottomRectangle, posYBottomRectangle,
+            										widthBottomRectangle, heightBottomRectangle);
             setBackground(Color.white);
         }
 
@@ -59,38 +62,16 @@ class RectanglesCanvas extends Canvas {
             // 15. Draw rectangle1.
 
             g2D.draw(topRectangle);
-
-            // 16. Create a gradient paint object and assign it
-            // to the graphics context. Next, call the fill() method
-            // to draw the filled rectangle2.
-
-            GradientPaint gp = new GradientPaint(125f, 25f,
-                                                 Color.yellow,
-                                                 225f, 100f,
-                                                 Color.blue);
-            g2D.setPaint(gp);
-            g2D.fill(bottomRectangle);
-
-            // 17. Create a buffered image object, and create
-            // the texture paint. Assign the texture paint to
-            // the graphics context. Next, call the fill() method
-            // to draw the filled rectangle.
-
-            BufferedImage bi = new BufferedImage(5,5,
-                                   BufferedImage.TYPE_INT_RGB);
-            Graphics2D big = bi.createGraphics();
-            big.setColor(Color.magenta);
-            big.fillRect(0, 0, 5, 5);
-            big.setColor(Color.black);
-            big.drawLine(0, 0, 5, 5);
-            Rectangle r = new Rectangle(0, 0, 5, 5);
-            
-            
+            g2D.draw(bottomRectangle);
         }
         
         public void setTopRectangleWidth(int width){
         	topRectangle.setRect(posXTopRectangle, posYTopRectangle,
         						width, heightTopRectangle);
+        }
+        
+        public int getTopRectangleWidth(){
+        	return (int) topRectangle.getWidth();
         }
         
         public void setTopRectangleHeight(int height){
@@ -101,6 +82,10 @@ class RectanglesCanvas extends Canvas {
         public void setBottomRectangleWidth(int width){
         	bottomRectangle.setRect(posXBottomRectangle, posYBottomRectangle,
         							width, heightBottomRectangle);
+        }
+        
+        public int getBottomRectangleWidth(){
+        	return (int) bottomRectangle.getWidth();
         }
         
         public void setBottomRectangleHeight(int height){
@@ -153,5 +138,62 @@ class RectanglesCanvas extends Canvas {
         	return spacingBetweenRectangles;
         }
         
+     // Return the sum of input text values
+        public double getSumOfRectangleValues(){
+        	return getTopRectangleValue() + getBottomRectangleValue();
+        }
+        
+        // Calculate space available for both rectangles
+        public int getAvailableSpaceForRectangles(){
+        	return  getHeightCanvas() - 
+        			posYTopRectangle - 
+        			spacingBetweenBottomToRectangle - 
+        			getSpacingBetweenRectangles();
+        }
+        
+        public int getTopRectangleHeight(){
+        	return (int) Math.floor((getAvailableSpaceForRectangles() / 
+        								getSumOfRectangleValues()) 
+        								* getTopRectangleValue());
+        }
+        
+        public int getBottomRectangleHeight(){
+        	return getAvailableSpaceForRectangles() - getTopRectangleHeight();
+        }
+        
+        public double getTopRectangleValue(){
+        	return topRectangleValue;
+        }
+        
+        public void setTopRectangleValue(double value){
+        	topRectangleValue = value;
+        }
+        
+        public double getBottomRectangleValue(){
+			return bottomRectangleValue;
+        }
+        
+        public void setBottomRectangleValue(double value){
+        	bottomRectangleValue = value;
+        }
+        
+        public void updateHeights(){
+        	setTopRectangleHeight((int) Math.floor(getTopRectangleHeight()));
+        	setBottomRectangleHeight(getBottomRectangleHeight());
+        	
+        	System.out.println("Top Rectangle Value: "+ getTopRectangleValue());
+        	System.out.println("Bottom Rectangle Value: "+ getBottomRectangleValue());
+        	System.out.println("Sum of Rectangle Values: " + getSumOfRectangleValues());
+        	System.out.println(getAvailableSpaceForRectangles());
+        	System.out.println(getTopRectangleHeight());
+        	System.out.println(getBottomRectangleHeight());
+        ;
+        	System.out.println(bottomRectangle.getWidth());
+        }
+        
+        public void updateWidths(){
+        	setTopRectangleWidth(getTopRectangleWidth());
+        	setBottomRectangleWidth(getBottomRectangleWidth());
+        }
         
     }

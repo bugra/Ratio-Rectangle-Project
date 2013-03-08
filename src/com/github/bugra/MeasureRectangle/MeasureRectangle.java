@@ -38,9 +38,11 @@ public class MeasureRectangle extends JApplet {
     JTextField bottomRectangleMeasure;
     
     // TODO Ratio of Rectangle Measures
-    private double topRectangleValue = 10.0;
-    private double bottomRectangleValue = 10.0;
-    private double ratioHeightofRectangles = (double)topRectangleValue/ bottomRectangleValue;
+    public static final double INITIAL_TOP_RECTANGLE_VALUE = 10.0;
+    public static final double INITIAL_BOTTOM_RECTANGLE_VALUE = 10.0;
+    
+    private double topRectangleValue = INITIAL_TOP_RECTANGLE_VALUE;
+    private double bottomRectangleValue = INITIAL_BOTTOM_RECTANGLE_VALUE;
     
     private final int MIN_SLIDER = 0;
     private final int MAX_SLIDER = 100;
@@ -124,17 +126,32 @@ public class MeasureRectangle extends JApplet {
         topRectangleMeasure.getDocument().addDocumentListener(new DocumentListener() {
         	  public void changedUpdate(DocumentEvent e) {
         		  topRectangleValue = Double.parseDouble(topRectangleMeasure.getText());
-        		  ratioHeightofRectangles = topRectangleValue / bottomRectangleValue;
+        		  canvas.setTopRectangleValue(topRectangleValue);
+        		  canvas.updateHeights();
+        		  canvas.setBottomRectangleYPosition(RectanglesCanvas.posYTopRectangle +
+							canvas.getTopRectangleHeight() + 
+							canvas.getSpacingBetweenRectangles());
+        		  canvas.repaint();
         		  //warn();
         	  }
         	  public void removeUpdate(DocumentEvent e) {
         		  topRectangleValue = Double.parseDouble(topRectangleMeasure.getText());  
-        		  ratioHeightofRectangles = topRectangleValue / bottomRectangleValue;
+        		  canvas.setTopRectangleValue(topRectangleValue);
+        		  canvas.updateHeights();
+        		  canvas.setBottomRectangleYPosition(RectanglesCanvas.posYTopRectangle +
+							canvas.getTopRectangleHeight() + 
+							canvas.getSpacingBetweenRectangles());
+        		  canvas.repaint();
         		  warn();
         	  }
         	  public void insertUpdate(DocumentEvent e) {
         		  topRectangleValue = Double.parseDouble(topRectangleMeasure.getText());  
-        		  ratioHeightofRectangles = topRectangleValue / bottomRectangleValue;
+        		  canvas.setTopRectangleValue(topRectangleValue);
+        		  canvas.updateHeights();
+        		  canvas.setBottomRectangleYPosition(RectanglesCanvas.posYTopRectangle +
+							canvas.getTopRectangleHeight() + 
+							canvas.getSpacingBetweenRectangles());
+        		  canvas.repaint();
         		  //warn();
         	  }
         	  
@@ -152,17 +169,32 @@ public class MeasureRectangle extends JApplet {
         bottomRectangleMeasure.getDocument().addDocumentListener(new DocumentListener() {
         	  public void changedUpdate(DocumentEvent e) {
         		  bottomRectangleValue = Double.parseDouble(bottomRectangleMeasure.getText());
-        		  ratioHeightofRectangles = topRectangleValue / bottomRectangleValue;
+        		  canvas.setBottomRectangleValue(bottomRectangleValue);
+        		  canvas.updateHeights();
+        		  canvas.setBottomRectangleYPosition(RectanglesCanvas.posYTopRectangle +
+							canvas.getTopRectangleHeight() + 
+							canvas.getSpacingBetweenRectangles());
+        		  canvas.repaint();
         		  //warn();
         	  }
         	  public void removeUpdate(DocumentEvent e) {
         		  bottomRectangleValue = Double.parseDouble(bottomRectangleMeasure.getText());  
-        		  ratioHeightofRectangles = topRectangleValue / bottomRectangleValue;
+        		  canvas.setBottomRectangleValue(bottomRectangleValue);
+        		  canvas.updateHeights();
+        		  canvas.setBottomRectangleYPosition(RectanglesCanvas.posYTopRectangle +
+							canvas.getTopRectangleHeight() + 
+							canvas.getSpacingBetweenRectangles());
+        		  canvas.repaint();
         		  warn();
         	  }
         	  public void insertUpdate(DocumentEvent e) {
         		  bottomRectangleValue = Double.parseDouble(bottomRectangleMeasure.getText());
-        		  ratioHeightofRectangles = topRectangleValue / bottomRectangleValue;
+        		  canvas.setBottomRectangleValue(bottomRectangleValue);
+        		  canvas.updateHeights();
+        		  canvas.setBottomRectangleYPosition(RectanglesCanvas.posYTopRectangle +
+							canvas.getTopRectangleHeight() + 
+							canvas.getSpacingBetweenRectangles());
+        		  canvas.repaint();
         		  //warn();
         	  }
         	  
@@ -196,7 +228,12 @@ public class MeasureRectangle extends JApplet {
         this.addComponentListener(new ComponentAdapter() {
         	  public void componentResized(ComponentEvent event) {
         	     canvas.setSizeCanvas(canvas.getSize());
-        	     canvas.setBottomRectangleHeight(canvas.getHeight() - canvas.getSpacingBetweenRectangles() - topRectangleMeasure.getHeight());
+        	     canvas.setBottomRectangleYPosition(RectanglesCanvas.posYTopRectangle +
+        	    		 							canvas.getTopRectangleHeight() + 
+        	    		 							canvas.getSpacingBetweenRectangles());
+        	     canvas.updateHeights();
+        	     canvas.updateWidths();
+        	     canvas.repaint();
         	  }
         	});
     }
@@ -208,15 +245,12 @@ public class MeasureRectangle extends JApplet {
             bottomTextField.setText(Double.toString(tempWidth));
             int width = (int) ((canvas.getWidthCanvas() - 
 	 							(2 * RectanglesCanvas.posXTopRectangle)) * tempWidth);
-            
 	 		canvas.setTopRectangleWidth(width);
 	 		canvas.setBottomRectangleWidth(width);
-	 		System.out.println(getRatioHeightOfRectangles());
+	 		canvas.updateWidths();
             canvas.repaint();
         }
-        public double getRatioHeightOfRectangles(){
-        	return ratioHeightofRectangles;
-        }
+        
     }
     
 }
