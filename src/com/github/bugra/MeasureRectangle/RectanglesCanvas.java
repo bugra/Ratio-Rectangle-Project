@@ -22,6 +22,7 @@ class RectanglesCanvas extends Canvas {
         private int heightTopRectangle = 50;
         
         public static final int posXBottomRectangle = 10;
+        public static final int spacingBetweenBottomToRectangle = 10;
         private final int posYBottomRectangle = 160;
         private int widthBottomRectangle = 50;
         private int heightBottomRectangle = 50;
@@ -37,9 +38,10 @@ class RectanglesCanvas extends Canvas {
 
             // Create instances of 2D rectangles
 
-            topRectangle = new Rectangle2D.Float(10, 10, 50, 50);
-            bottomRectangle = new Rectangle2D.Float(10, 125, 100, 75);
-            
+            topRectangle = new Rectangle2D.Float(posXTopRectangle, posYTopRectangle,
+            									widthTopRectangle, heightTopRectangle);
+            bottomRectangle = new Rectangle2D.Float(posXBottomRectangle, 410, 50, 50);
+            System.out.println(getHeightCanvas());
             setBackground(Color.white);
         }
 
@@ -104,6 +106,16 @@ class RectanglesCanvas extends Canvas {
         public void setBottomRectangleHeight(int height){
         	bottomRectangle.setRect(posXBottomRectangle, posYBottomRectangle,
         							widthBottomRectangle, height);
+        }
+        
+        public void setBottomRectangleXPosition(int xPosition){
+        	bottomRectangle.setRect(xPosition, posYBottomRectangle, 
+        							widthBottomRectangle, widthBottomRectangle);
+        }
+        
+        public void setBottomRectangleYPosition(int yPosition){
+        	bottomRectangle.setRect(posXBottomRectangle, yPosition, 
+					widthBottomRectangle, widthBottomRectangle);
         }
         
         public void setSizeCanvas(Dimension d){
