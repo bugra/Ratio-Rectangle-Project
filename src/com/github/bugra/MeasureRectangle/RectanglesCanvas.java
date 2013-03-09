@@ -10,7 +10,7 @@ import java.awt.geom.Rectangle2D;
 
 @SuppressWarnings("serial")
 class RectanglesCanvas extends Canvas {
-        Rectangle2D topRectangle, bottomRectangle;
+        protected Rectangle2D topRectangle, bottomRectangle;
         
         public static final int posXTopRectangle = 10;
         public static final int posYTopRectangle = 10;
@@ -19,7 +19,6 @@ class RectanglesCanvas extends Canvas {
         
         public static final int posXBottomRectangle = 10;
         public static final int spacingBetweenBottomToRectangle = 10;
-        private final int posYBottomRectangle = 160;
         private int widthBottomRectangle = 50;
         private int heightBottomRectangle = 50;
         
@@ -39,23 +38,22 @@ class RectanglesCanvas extends Canvas {
 
             topRectangle = new Rectangle2D.Float(posXTopRectangle, posYTopRectangle,
             									widthTopRectangle, heightTopRectangle);
-            bottomRectangle = new Rectangle2D.Float(posXBottomRectangle, posYBottomRectangle,
+            bottomRectangle = new Rectangle2D.Float(posXBottomRectangle, getBottomRectangleYPosition(),
             										widthBottomRectangle, heightBottomRectangle);
             setBackground(Color.white);
         }
 
         public void paint(Graphics g) {
 
-            // 12. Set up the 2D graphics context
+            // 2D graphics context
 
             Graphics2D g2D = (Graphics2D) g;
 
-            // 14. Create a stroke object with the prescibed with
-            // and assign it to the graphics context. 
+            // Stroke for bold lines 
 
             g2D.setStroke(new BasicStroke(5.0f));
 
-            // 15. Draw rectangle1.
+            // Draw rectangles
 
             g2D.draw(topRectangle);
             g2D.draw(bottomRectangle);
@@ -76,7 +74,7 @@ class RectanglesCanvas extends Canvas {
         }
         
         public void setBottomRectangleWidth(int width){
-        	bottomRectangle.setRect(posXBottomRectangle, posYBottomRectangle,
+        	bottomRectangle.setRect(posXBottomRectangle, getBottomRectangleYPosition(),
         							width, heightBottomRectangle);
         }
         
@@ -85,12 +83,12 @@ class RectanglesCanvas extends Canvas {
         }
         
         public void setBottomRectangleHeight(int height){
-        	bottomRectangle.setRect(posXBottomRectangle, posYBottomRectangle,
+        	bottomRectangle.setRect(posXBottomRectangle, getBottomRectangleYPosition(),
         							widthBottomRectangle, height);
         }
         
         public void setBottomRectangleXPosition(int xPosition){
-        	bottomRectangle.setRect(xPosition, posYBottomRectangle, 
+        	bottomRectangle.setRect(xPosition, getBottomRectangleYPosition(), 
         							widthBottomRectangle, heightBottomRectangle);
         }
         
@@ -171,6 +169,11 @@ class RectanglesCanvas extends Canvas {
         
         public void setBottomRectangleValue(double value){
         	bottomRectangleValue = value;
+        }
+        
+        public int getBottomRectangleYPosition(){
+        	return posYTopRectangle + (int) topRectangle.getHeight() + 
+        			getSpacingBetweenRectangles();
         }
         
     }
