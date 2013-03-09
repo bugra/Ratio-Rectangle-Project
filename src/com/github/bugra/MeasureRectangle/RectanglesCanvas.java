@@ -37,9 +37,9 @@ class RectanglesCanvas extends Canvas {
             // Create instances of 2D rectangles
 
             topRectangle = new Rectangle2D.Float(posXTopRectangle, posYTopRectangle,
-            									widthTopRectangle, heightTopRectangle);
+            									widthTopRectangle, getTopRectangleHeight());
             bottomRectangle = new Rectangle2D.Float(posXBottomRectangle, getBottomRectangleYPosition(),
-            										widthBottomRectangle, heightBottomRectangle);
+            										widthBottomRectangle, getBottomRectangleHeight());
             setBackground(Color.white);
         }
 
@@ -61,7 +61,7 @@ class RectanglesCanvas extends Canvas {
         
         public void setTopRectangleWidth(int width){
         	topRectangle.setRect(posXTopRectangle, posYTopRectangle,
-        						width, heightTopRectangle);
+        						width, getTopRectangleHeight());
         }
         
         public int getTopRectangleWidth(){
@@ -70,12 +70,12 @@ class RectanglesCanvas extends Canvas {
         
         public void setTopRectangleHeight(int height){
         	topRectangle.setRect(posXTopRectangle, posYTopRectangle,
-        						widthTopRectangle, height);
+        						getTopRectangleWidth(), height);
         }
         
         public void setBottomRectangleWidth(int width){
         	bottomRectangle.setRect(posXBottomRectangle, getBottomRectangleYPosition(),
-        							width, heightBottomRectangle);
+        							width, getBottomRectangleHeight());
         }
         
         public int getBottomRectangleWidth(){
@@ -84,17 +84,17 @@ class RectanglesCanvas extends Canvas {
         
         public void setBottomRectangleHeight(int height){
         	bottomRectangle.setRect(posXBottomRectangle, getBottomRectangleYPosition(),
-        							widthBottomRectangle, height);
+        							getBottomRectangleWidth(), height);
         }
         
         public void setBottomRectangleXPosition(int xPosition){
         	bottomRectangle.setRect(xPosition, getBottomRectangleYPosition(), 
-        							widthBottomRectangle, heightBottomRectangle);
+        			getBottomRectangleWidth(), getBottomRectangleHeight());
         }
         
         public void setBottomRectangleYPosition(int yPosition){
         	bottomRectangle.setRect(posXBottomRectangle, yPosition, 
-					widthBottomRectangle, heightBottomRectangle);
+					getBottomRectangleWidth(), getBottomRectangleHeight());
         }
         
         public void setSizeCanvas(Dimension d){

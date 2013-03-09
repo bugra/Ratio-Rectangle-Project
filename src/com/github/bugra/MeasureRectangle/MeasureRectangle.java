@@ -47,8 +47,8 @@ public class MeasureRectangle extends JApplet {
     // Length of text Fields
     public static final int LENGTH_OF_TEXT_FIELD = 3;
     
-    public static final DecimalFormat decimalFormat = new DecimalFormat("#.##");
-    
+    public static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#.##");
+    public static final JSeparator SEPARATOR = new JSeparator(SwingConstants.VERTICAL);
     private double topRectangleValue = INITIAL_TOP_RECTANGLE_VALUE;
     private double bottomRectangleValue = INITIAL_BOTTOM_RECTANGLE_VALUE;
     
@@ -59,31 +59,18 @@ public class MeasureRectangle extends JApplet {
     private final int INITIAL_WIDTH = 800;
     private final int INITIAL_HEIGHT = 600;
     
-    
     // Initial value of sliders
     double tempWidth = 0.5;
 
     public void init() {
 
-        // 1. Get the content pane and assign layout
-
-        Container container = getContentPane();
-        
-        // 2. Add the canvas with rectangles
-
+    	Container container = getContentPane();
         canvas = new RectanglesCanvas();
         container.add(canvas);
-
-        // 3. Create the control panel with titled border
-
         JPanel belowPanel = new JPanel();
         TitledBorder southBorder = new TitledBorder("Change the ratio of below rectangle");
         belowPanel.setBorder(southBorder);
-
-        // 4. Create a label, slider and text field
-
         JLabel label = new JLabel("Below Rectangle: ", JLabel.RIGHT);
-
         bottomSlider = new JSlider(JSlider.HORIZONTAL, MIN_SLIDER, 
         									MAX_SLIDER, INITIAL_SLIDER);
         bottomSlider.addChangeListener(new SliderListener());
@@ -92,7 +79,6 @@ public class MeasureRectangle extends JApplet {
         									LENGTH_OF_TEXT_FIELD);
         bottomATextField = new JTextField("aTextField");
         bottomBTextField = new JTextField("bTextField");
-        // 5. Add the label, slider and text field to the panel
 
         belowPanel.add(label);
         belowPanel.add(bottomSlider);
@@ -100,15 +86,11 @@ public class MeasureRectangle extends JApplet {
         belowPanel.add(bottomATextField);
         belowPanel.add(bottomBTextField);
 
-        // 6. Add the north panel to the frame
-
         container.add(BorderLayout.SOUTH, belowPanel);
         
         JPanel topPanel = new JPanel();
         TitledBorder topBorder = new TitledBorder("Change the ratio of above rectangle");
         topPanel.setBorder(topBorder);
-
-        // 4. Create a label, slider and text field
 
         JLabel topLabel = new JLabel("Above Rectangle", JLabel.RIGHT);
 
@@ -116,12 +98,11 @@ public class MeasureRectangle extends JApplet {
         								MAX_SLIDER, INITIAL_SLIDER);
         
         topSlider.addChangeListener(new SliderListener());
-
         topTextField = new JTextField(Double.toString((double) INITIAL_SLIDER / MAX_SLIDER), 
         									LENGTH_OF_TEXT_FIELD);
+        
         topATextField = new JTextField("aTextField");
         topBTextField = new JTextField("bTextField");
-        // 5. Add the label, slider and text field to the panel
 
         topPanel.add(topLabel);
         topPanel.add(topSlider);
@@ -129,11 +110,18 @@ public class MeasureRectangle extends JApplet {
         topPanel.add(topATextField);
         topPanel.add(topBTextField);
         
-        container.add(BorderLayout.NORTH, topPanel);
+        // INITIALIZATION
+        tempWidth = (int) (bottomSlider.getValue() / (double)MAX_SLIDER);
+        canvas.setTopRectangleWidth((int) ((canvas.getWidthCanvas() - 
+					(2 * RectanglesCanvas.posXTopRectangle)) * tempWidth));
+ 		canvas.setBottomRectangleWidth((int) ((canvas.getWidthCanvas() - 
+					(2 * RectanglesCanvas.posXTopRectangle)) * tempWidth));
+
+ 		container.add(BorderLayout.NORTH, topPanel);
         topRectangleMeasure = new JTextField();
         topRectangleMeasure.setText("10");
-        
         topRectangleMeasure.getDocument().addDocumentListener(new DocumentListener() {
+        	  
         	  public void changedUpdate(DocumentEvent e) {
         		  topRectangleValue = Double.parseDouble(topRectangleMeasure.getText());
         		  canvas.setTopRectangleValue(topRectangleValue);
@@ -148,7 +136,7 @@ public class MeasureRectangle extends JApplet {
         		  double ratioOfRectangles = canvas.getTopRectangleValue() / 
    					   canvas.getBottomRectangleValue();
         		  bottomTextField.setText(Double.toString(tempWidth));
-        		  topTextField.setText(decimalFormat.format((ratioOfRectangles * tempWidth)));
+        		  topTextField.setText(DECIMAL_FORMAT.format((ratioOfRectangles * tempWidth)));
         		  canvas.repaint();
         		  //warn();
         	  }
@@ -167,7 +155,7 @@ public class MeasureRectangle extends JApplet {
         		  double ratioOfRectangles = canvas.getTopRectangleValue() / 
    					   canvas.getBottomRectangleValue();
         		  bottomTextField.setText(Double.toString(tempWidth));
-        		  topTextField.setText(decimalFormat.format((ratioOfRectangles * tempWidth)));
+        		  topTextField.setText(DECIMAL_FORMAT.format((ratioOfRectangles * tempWidth)));
         		  canvas.repaint();
         		  warn();
         	  }
@@ -186,13 +174,13 @@ public class MeasureRectangle extends JApplet {
         		  double ratioOfRectangles = canvas.getTopRectangleValue() / 
    					   canvas.getBottomRectangleValue();
         		  bottomTextField.setText(Double.toString(tempWidth));
-        		  topTextField.setText(decimalFormat.format((ratioOfRectangles * tempWidth)));
+        		  topTextField.setText(DECIMAL_FORMAT.format((ratioOfRectangles * tempWidth)));
         		  canvas.repaint();
         		  //warn();
         	  }
         	  
         	  public void warn() {
-        	   	  if (Integer.parseInt(topRectangleMeasure.getText())<=0){
+        	   	  if (Integer.parseInt(topRectangleMeasure.getText()) <= 0){
         	   		  JOptionPane.showMessageDialog(null,
         	   				  "Error: Please enter number bigger than 0", "Error Massage",
         	          JOptionPane.ERROR_MESSAGE);
@@ -203,6 +191,7 @@ public class MeasureRectangle extends JApplet {
         bottomRectangleMeasure = new JTextField();
         bottomRectangleMeasure.setText("10");
         bottomRectangleMeasure.getDocument().addDocumentListener(new DocumentListener() {
+        	  
         	  public void changedUpdate(DocumentEvent e) {
         		  bottomRectangleValue = Double.parseDouble(bottomRectangleMeasure.getText());
         		  canvas.setBottomRectangleValue(bottomRectangleValue);
@@ -217,7 +206,7 @@ public class MeasureRectangle extends JApplet {
         		  double ratioOfRectangles = canvas.getTopRectangleValue() / 
    					   canvas.getBottomRectangleValue();
         		  bottomTextField.setText(Double.toString(tempWidth));
-        		  topTextField.setText(decimalFormat.format((ratioOfRectangles * tempWidth)));
+        		  topTextField.setText(DECIMAL_FORMAT.format((ratioOfRectangles * tempWidth)));
         		  canvas.repaint();
         		  //warn();
         	  }
@@ -236,7 +225,7 @@ public class MeasureRectangle extends JApplet {
         		  double ratioOfRectangles = canvas.getTopRectangleValue() / 
    					   canvas.getBottomRectangleValue();
         		  bottomTextField.setText(Double.toString(tempWidth));
-        		  topTextField.setText(decimalFormat.format((ratioOfRectangles * tempWidth)));
+        		  topTextField.setText(DECIMAL_FORMAT.format((ratioOfRectangles * tempWidth)));
         		  canvas.repaint();
         		  warn();
         	  }
@@ -255,18 +244,19 @@ public class MeasureRectangle extends JApplet {
         		  double ratioOfRectangles = canvas.getTopRectangleValue() / 
    					   canvas.getBottomRectangleValue();
         		  bottomTextField.setText(Double.toString(tempWidth));
-        		  topTextField.setText(decimalFormat.format((ratioOfRectangles * tempWidth)));
+        		  topTextField.setText(DECIMAL_FORMAT.format((ratioOfRectangles * tempWidth)));
         		  canvas.repaint();
         		  //warn();
         	  }
         	  
         	  public void warn() {
-        	   	  if (Integer.parseInt(bottomRectangleMeasure.getText())<=0){
+        	   	  if (Integer.parseInt(bottomRectangleMeasure.getText()) <= 0){
         	   		  JOptionPane.showMessageDialog(null,
         	   				  "Error: Please enter number bigger than 0", "Error Massage",
         	          JOptionPane.ERROR_MESSAGE);
         	     }
         	  }
+        	  
         	});
         
         topRectangleMeasure.setPreferredSize(new Dimension(10, 50));
@@ -274,15 +264,14 @@ public class MeasureRectangle extends JApplet {
         JPanel westPanel = new JPanel();
         westPanel.setPreferredSize(new Dimension(50, 50));
         TitledBorder westBorder = new TitledBorder("Ratio");
-        //JSeparator separator = new JSeparator();
+        
         westPanel.setBorder(westBorder);
         westPanel.setLayout(new GridLayout(0,1));
         westPanel.add(topRectangleMeasure);
-        westPanel.add(new JSeparator(SwingConstants.VERTICAL));
-        westPanel.add(new JSeparator(SwingConstants.VERTICAL));
-        westPanel.add(new JSeparator(SwingConstants.VERTICAL));
-        westPanel.add(new JSeparator(SwingConstants.VERTICAL));
-        //westPanel.add(new JSeparator(SwingConstants.VERTICAL));
+        westPanel.add(SEPARATOR);
+        westPanel.add(SEPARATOR);
+        westPanel.add(SEPARATOR);
+        westPanel.add(SEPARATOR);
         westPanel.add(bottomRectangleMeasure);        
         container.add(BorderLayout.WEST, westPanel);
         this.setSize(INITIAL_WIDTH, INITIAL_HEIGHT);
@@ -290,23 +279,19 @@ public class MeasureRectangle extends JApplet {
         this.addComponentListener(new ComponentAdapter() {
         	  public void componentResized(ComponentEvent event) {
         	     canvas.setSizeCanvas(canvas.getSize());
-        	     canvas.setBottomRectangleYPosition(RectanglesCanvas.posYTopRectangle +
-        	    		 							canvas.getTopRectangleHeight() + 
-        	    		 							canvas.getSpacingBetweenRectangles());
         	     tempWidth = (bottomSlider.getValue() / (double) MAX_SLIDER);
         	     int width = (int) ((canvas.getWidthCanvas() - 
 							(2 * RectanglesCanvas.posXTopRectangle)) * tempWidth);
         	     canvas.setTopRectangleWidth(width);
      	 		 canvas.setBottomRectangleWidth(width);
-        	     //canvas.setTopRectangleHeight(canvas.getTopRectangleHeight());
-     	 		 //canvas.setBottomRectangleHeight(canvas.getBottomRectangleHeight());
      	 		 canvas.repaint();
         	  }
-        	});
+        });
     }
     
     class SliderListener implements ChangeListener {
         public void stateChanged(ChangeEvent e) {
+        	canvas.setSizeCanvas(canvas.getSize());
             JSlider tempSlider = (JSlider) e.getSource();
             tempWidth = (tempSlider.getValue() / (double)MAX_SLIDER);
             topSlider.setValue(tempSlider.getValue());
@@ -314,10 +299,9 @@ public class MeasureRectangle extends JApplet {
             double ratioOfRectangles = canvas.getTopRectangleValue() / 
 					   canvas.getBottomRectangleValue();
             bottomTextField.setText(Double.toString(tempWidth));
-            topTextField.setText(decimalFormat.format((ratioOfRectangles * tempWidth)));
+            topTextField.setText(DECIMAL_FORMAT.format((ratioOfRectangles * tempWidth)));
             int width = (int) ((canvas.getWidthCanvas() - 
 	 							(2 * RectanglesCanvas.posXTopRectangle)) * tempWidth);
-            canvas.setSizeCanvas(canvas.getSize());
             canvas.setBottomRectangleYPosition(RectanglesCanvas.posYTopRectangle +
 						canvas.getTopRectangleHeight() + 
 						canvas.getSpacingBetweenRectangles()+10);
@@ -325,7 +309,6 @@ public class MeasureRectangle extends JApplet {
 	 		canvas.setBottomRectangleWidth(width);
             canvas.repaint();
         }
-        
     }
     
 }
