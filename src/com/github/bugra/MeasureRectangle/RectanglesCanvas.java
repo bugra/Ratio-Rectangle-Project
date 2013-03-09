@@ -173,14 +173,4 @@ class RectanglesCanvas extends Canvas {
         	bottomRectangleValue = value;
         }
         
-        public void updateHeights(){
-        	setTopRectangleHeight((getTopRectangleHeight()));
-        	setBottomRectangleHeight(getBottomRectangleHeight());
-        }
-        
-        public void updateWidths(){
-        	setTopRectangleWidth(getTopRectangleWidth());
-        	setBottomRectangleWidth(getBottomRectangleWidth());
-        }
-        
     }

@@ -129,33 +129,41 @@ public class MeasureRectangle extends JApplet {
         	  public void changedUpdate(DocumentEvent e) {
         		  topRectangleValue = Double.parseDouble(topRectangleMeasure.getText());
         		  canvas.setTopRectangleValue(topRectangleValue);
+        		  canvas.setBottomRectangleValue(bottomRectangleValue);
         		  canvas.setSizeCanvas(canvas.getSize());
-        		  canvas.updateHeights();
         		  canvas.setBottomRectangleYPosition(RectanglesCanvas.posYTopRectangle +
 							canvas.getTopRectangleHeight() + 
 							canvas.getSpacingBetweenRectangles());
+        		  canvas.setTopRectangleHeight(canvas.getTopRectangleHeight());
+        		  canvas.setBottomRectangleHeight(canvas.getBottomRectangleHeight());
         		  canvas.repaint();
         		  //warn();
         	  }
+        	  
         	  public void removeUpdate(DocumentEvent e) {
         		  topRectangleValue = Double.parseDouble(topRectangleMeasure.getText());  
         		  canvas.setTopRectangleValue(topRectangleValue);
+        		  canvas.setBottomRectangleValue(bottomRectangleValue);
         		  canvas.setSizeCanvas(canvas.getSize());
-        		  canvas.updateHeights();
         		  canvas.setBottomRectangleYPosition(RectanglesCanvas.posYTopRectangle +
 							canvas.getTopRectangleHeight() + 
 							canvas.getSpacingBetweenRectangles());
+        		  canvas.setTopRectangleHeight(canvas.getTopRectangleHeight());
+        		  canvas.setBottomRectangleHeight(canvas.getBottomRectangleHeight());
         		  canvas.repaint();
         		  warn();
         	  }
+        	  
         	  public void insertUpdate(DocumentEvent e) {
         		  topRectangleValue = Double.parseDouble(topRectangleMeasure.getText());  
         		  canvas.setTopRectangleValue(topRectangleValue);
+        		  canvas.setBottomRectangleValue(bottomRectangleValue);
         		  canvas.setSizeCanvas(canvas.getSize());
-        		  canvas.updateHeights();
         		  canvas.setBottomRectangleYPosition(RectanglesCanvas.posYTopRectangle +
 							canvas.getTopRectangleHeight() + 
 							canvas.getSpacingBetweenRectangles());
+        		  canvas.setTopRectangleHeight(canvas.getTopRectangleHeight());
+        		  canvas.setBottomRectangleHeight(canvas.getBottomRectangleHeight());
         		  canvas.repaint();
         		  //warn();
         	  }
@@ -175,33 +183,41 @@ public class MeasureRectangle extends JApplet {
         	  public void changedUpdate(DocumentEvent e) {
         		  bottomRectangleValue = Double.parseDouble(bottomRectangleMeasure.getText());
         		  canvas.setBottomRectangleValue(bottomRectangleValue);
+        		  canvas.setTopRectangleValue(topRectangleValue);
         		  canvas.setSizeCanvas(canvas.getSize());
-        		  canvas.updateHeights();
         		  canvas.setBottomRectangleYPosition(RectanglesCanvas.posYTopRectangle +
 							canvas.getTopRectangleHeight() + 
 							canvas.getSpacingBetweenRectangles());
+        		  canvas.setTopRectangleHeight(canvas.getTopRectangleHeight());
+        		  canvas.setBottomRectangleHeight(canvas.getBottomRectangleHeight());
         		  canvas.repaint();
         		  //warn();
         	  }
+        	  
         	  public void removeUpdate(DocumentEvent e) {
         		  bottomRectangleValue = Double.parseDouble(bottomRectangleMeasure.getText());  
         		  canvas.setBottomRectangleValue(bottomRectangleValue);
+        		  canvas.setTopRectangleValue(topRectangleValue);
         		  canvas.setSizeCanvas(canvas.getSize());
-        		  canvas.updateHeights();
         		  canvas.setBottomRectangleYPosition(RectanglesCanvas.posYTopRectangle +
 							canvas.getTopRectangleHeight() + 
 							canvas.getSpacingBetweenRectangles());
+        		  canvas.setTopRectangleHeight(canvas.getTopRectangleHeight());
+        		  canvas.setBottomRectangleHeight(canvas.getBottomRectangleHeight());
         		  canvas.repaint();
         		  warn();
         	  }
+        	  
         	  public void insertUpdate(DocumentEvent e) {
         		  bottomRectangleValue = Double.parseDouble(bottomRectangleMeasure.getText());
         		  canvas.setBottomRectangleValue(bottomRectangleValue);
+        		  canvas.setTopRectangleValue(topRectangleValue);
         		  canvas.setSizeCanvas(canvas.getSize());
-        		  canvas.updateHeights();
         		  canvas.setBottomRectangleYPosition(RectanglesCanvas.posYTopRectangle +
 							canvas.getTopRectangleHeight() + 
 							canvas.getSpacingBetweenRectangles());
+        		  canvas.setTopRectangleHeight(canvas.getTopRectangleHeight());
+        		  canvas.setBottomRectangleHeight(canvas.getBottomRectangleHeight());
         		  canvas.repaint();
         		  //warn();
         	  }
@@ -232,15 +248,18 @@ public class MeasureRectangle extends JApplet {
         westPanel.add(bottomRectangleMeasure);        
         container.add(BorderLayout.WEST, westPanel);
         this.setSize(INITIAL_WIDTH, INITIAL_HEIGHT);
-        canvas.updateWidths();
+        
         this.addComponentListener(new ComponentAdapter() {
         	  public void componentResized(ComponentEvent event) {
         	     canvas.setSizeCanvas(canvas.getSize());
         	     canvas.setBottomRectangleYPosition(RectanglesCanvas.posYTopRectangle +
         	    		 							canvas.getTopRectangleHeight() + 
         	    		 							canvas.getSpacingBetweenRectangles());
-        	     canvas.updateHeights();
-        	     canvas.updateWidths();
+        	     tempWidth = (bottomSlider.getValue() / (double) MAX_SLIDER);
+        	     int width = (int) ((canvas.getWidthCanvas() - 
+							(2 * RectanglesCanvas.posXTopRectangle)) * tempWidth);
+        	     canvas.setTopRectangleWidth(width);
+     	 		 canvas.setBottomRectangleWidth(width);
         	     canvas.repaint();
         	  }
         	});
@@ -261,7 +280,6 @@ public class MeasureRectangle extends JApplet {
 						canvas.getSpacingBetweenRectangles()+10);
 	 		canvas.setTopRectangleWidth(width);
 	 		canvas.setBottomRectangleWidth(width);
-	 		canvas.updateWidths();
             canvas.repaint();
         }
         
