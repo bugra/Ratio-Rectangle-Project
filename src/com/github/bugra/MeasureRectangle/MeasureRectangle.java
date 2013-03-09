@@ -26,6 +26,7 @@ import javax.swing.event.DocumentListener;
 @SuppressWarnings("serial")
 public class MeasureRectangle extends JApplet {
     RectanglesCanvas canvas;
+    GridComponent gridComponent;
     
     JTextField bottomTextField;
     JTextField bottomATextField;
@@ -41,8 +42,8 @@ public class MeasureRectangle extends JApplet {
     JSlider topSlider;
     JSlider bottomSlider;
     // TODO Ratio of Rectangle Measures
-    public static final double INITIAL_TOP_RECTANGLE_VALUE = 10.0;
-    public static final double INITIAL_BOTTOM_RECTANGLE_VALUE = 10.0;
+    public static final double INITIAL_TOP_RECTANGLE_VALUE = 1.0;
+    public static final double INITIAL_BOTTOM_RECTANGLE_VALUE = 1.0;
     
     // Length of text Fields
     public static final int LENGTH_OF_TEXT_FIELD = 3;
@@ -51,6 +52,8 @@ public class MeasureRectangle extends JApplet {
     public static final JSeparator SEPARATOR = new JSeparator(SwingConstants.VERTICAL);
     private double topRectangleValue = INITIAL_TOP_RECTANGLE_VALUE;
     private double bottomRectangleValue = INITIAL_BOTTOM_RECTANGLE_VALUE;
+    
+    public static final String INITIAL_VALUE_LABEL = "1";
     
     private final int MIN_SLIDER = 0;
     private final int MAX_SLIDER = 100;
@@ -63,10 +66,14 @@ public class MeasureRectangle extends JApplet {
     double tempWidth = 0.5;
 
     public void init() {
-
+    	
     	Container container = getContentPane();
         canvas = new RectanglesCanvas();
+        gridComponent = new GridComponent(10);
+        
+        //canvas.add(gridComponent);
         container.add(canvas);
+        
         JPanel belowPanel = new JPanel();
         TitledBorder southBorder = new TitledBorder("Change the ratio of below rectangle");
         belowPanel.setBorder(southBorder);
@@ -119,7 +126,7 @@ public class MeasureRectangle extends JApplet {
 
  		container.add(BorderLayout.NORTH, topPanel);
         topRectangleMeasure = new JTextField();
-        topRectangleMeasure.setText("10");
+        topRectangleMeasure.setText(INITIAL_VALUE_LABEL);
         topRectangleMeasure.getDocument().addDocumentListener(new DocumentListener() {
         	  
         	  public void changedUpdate(DocumentEvent e) {
@@ -189,7 +196,7 @@ public class MeasureRectangle extends JApplet {
         	});
         
         bottomRectangleMeasure = new JTextField();
-        bottomRectangleMeasure.setText("10");
+        bottomRectangleMeasure.setText(INITIAL_VALUE_LABEL);
         bottomRectangleMeasure.getDocument().addDocumentListener(new DocumentListener() {
         	  
         	  public void changedUpdate(DocumentEvent e) {
