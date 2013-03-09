@@ -4,13 +4,9 @@ import java.awt.BasicStroke;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.TexturePaint;
 import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
 
 @SuppressWarnings("serial")
 class RectanglesCanvas extends Canvas {
@@ -95,12 +91,12 @@ class RectanglesCanvas extends Canvas {
         
         public void setBottomRectangleXPosition(int xPosition){
         	bottomRectangle.setRect(xPosition, posYBottomRectangle, 
-        							widthBottomRectangle, widthBottomRectangle);
+        							widthBottomRectangle, heightBottomRectangle);
         }
         
         public void setBottomRectangleYPosition(int yPosition){
         	bottomRectangle.setRect(posXBottomRectangle, yPosition, 
-					widthBottomRectangle, widthBottomRectangle);
+					widthBottomRectangle, heightBottomRectangle);
         }
         
         public void setSizeCanvas(Dimension d){
@@ -178,17 +174,8 @@ class RectanglesCanvas extends Canvas {
         }
         
         public void updateHeights(){
-        	setTopRectangleHeight((int) Math.floor(getTopRectangleHeight()));
+        	setTopRectangleHeight((getTopRectangleHeight()));
         	setBottomRectangleHeight(getBottomRectangleHeight());
-        	
-        	System.out.println("Top Rectangle Value: "+ getTopRectangleValue());
-        	System.out.println("Bottom Rectangle Value: "+ getBottomRectangleValue());
-        	System.out.println("Sum of Rectangle Values: " + getSumOfRectangleValues());
-        	System.out.println(getAvailableSpaceForRectangles());
-        	System.out.println(getTopRectangleHeight());
-        	System.out.println(getBottomRectangleHeight());
-        ;
-        	System.out.println(bottomRectangle.getWidth());
         }
         
         public void updateWidths(){
