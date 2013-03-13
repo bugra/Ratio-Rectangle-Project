@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.MouseEvent;
 import java.text.DecimalFormat;
 
 import javax.swing.JApplet;
@@ -373,6 +374,8 @@ public class MeasureRectangle extends JApplet {
 						canvas.getSpacingBetweenRectangles()+10);
 	 		canvas.setTopRectangleWidth(width);
 	 		canvas.setBottomRectangleWidth(width);
+	 		topSlider.setToolTipText(String.valueOf(tempSlider.getValue()));
+	 		System.out.println(topSlider.getToolTipText());
             canvas.repaint();
         }
     }
