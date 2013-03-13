@@ -43,6 +43,7 @@ class RectanglesCanvas extends Canvas {
             									widthTopRectangle, getTopRectangleHeight());
             bottomRectangle = new Rectangle2D.Float(posXBottomRectangle, getBottomRectangleYPosition(),
             										widthBottomRectangle, getBottomRectangleHeight());
+            
             setBackground(Color.white);
         }
 
@@ -180,38 +181,3 @@ class RectanglesCanvas extends Canvas {
         }
         
     }
-
-class GridComponent extends JComponent
-{
-
-	public GridComponent(int n)
-	{
-	side = n;
-	setPreferredSize(new Dimension(1000, 1000));
-
-	}
-	public void paintComponent(Graphics g)
-	{
-	Graphics2D g2 = (Graphics2D) g;
-	
-		
-	
-			int count = side;
-			int size = 40;
-	
-			for( int i = 0; i < count; i ++)
-			{
-				for( int j = 0; j < count; j++)
-				{
-				Rectangle grid = new Rectangle( 300 + i * size, 20 + j * size, size, size);	
-				g2.draw(grid);
-			
-				}
-			}
-
-
-
-	 }
-	private int side;
-	
-}
