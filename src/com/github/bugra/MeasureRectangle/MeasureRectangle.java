@@ -25,7 +25,8 @@ import javax.swing.event.DocumentListener;
 
 @SuppressWarnings("serial")
 public class MeasureRectangle extends JApplet {
-    RectanglesCanvas canvas;
+	Container container;
+	RectanglesCanvas canvas;
     
     JTextField bottomTextField;
     JTextField bottomATextField;
@@ -80,11 +81,8 @@ public class MeasureRectangle extends JApplet {
 
     public void init() {
     	
-    	Container container = getContentPane();
+    	container = getContentPane();
         canvas = new RectanglesCanvas();
-        
-        //canvas.add(gridComponent);
-        container.add(canvas);
         
         bottomPanel = new JPanel();
         TitledBorder southBorder = new TitledBorder("Change the ratio of below rectangle");
@@ -105,7 +103,7 @@ public class MeasureRectangle extends JApplet {
         bottomPanel.add(bottomATextField);
         bottomPanel.add(bottomBTextField);
 
-        container.add(BorderLayout.SOUTH, bottomPanel);
+        
         
         topPanel = new JPanel();
         TitledBorder topBorder = new TitledBorder("Change the ratio of above rectangle");
@@ -136,7 +134,7 @@ public class MeasureRectangle extends JApplet {
  		canvas.setBottomRectangleWidth((int) ((canvas.getWidthCanvas() - 
 					(2 * RectanglesCanvas.posXTopRectangle)) * tempWidth));
 
- 		container.add(BorderLayout.NORTH, topPanel);
+ 		
         topRectangleMeasure = new JTextField();
         topRectangleMeasure.setText(INITIAL_VALUE_LABEL);
         topRectangleMeasure.getDocument().addDocumentListener(new DocumentListener() {
@@ -313,10 +311,20 @@ public class MeasureRectangle extends JApplet {
         // EAST PANEL DESIGN
         eastPanel.setBorder(eastBorder);
         eastPanel.setLayout(new GridLayout(0, 1));
-        eastPanel.add(redTopSlider);
-        eastPanel.add(SEPARATOR);
-        eastPanel.add(redBottomSlider);
+        //eastPanel.add(redTopSlider);
+        //eastPanel.add(SEPARATOR);
+        //eastPanel.add(redBottomSlider);
         
+        bottomPanel.add(redBottomSlider);
+        topPanel.add(redTopSlider);
+        
+        
+        //canvas.add(gridComponent);
+        // Add the canvas into the container
+        container.add(canvas);
+        // Add the panels into the container
+        container.add(BorderLayout.SOUTH, bottomPanel);
+        container.add(BorderLayout.NORTH, topPanel);
         container.add(BorderLayout.EAST, eastPanel);
         container.add(BorderLayout.WEST, westPanel);
         
