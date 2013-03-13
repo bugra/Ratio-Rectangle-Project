@@ -26,7 +26,6 @@ import javax.swing.event.DocumentListener;
 @SuppressWarnings("serial")
 public class MeasureRectangle extends JApplet {
     RectanglesCanvas canvas;
-    GridComponent gridComponent;
     
     JTextField bottomTextField;
     JTextField bottomATextField;
@@ -39,11 +38,25 @@ public class MeasureRectangle extends JApplet {
     JTextField topRectangleMeasure;
     JTextField bottomRectangleMeasure;
     
+    JPanel topPanel;
+    JPanel bottomPanel;
+    JPanel westPanel;
+    JPanel eastPanel;
+    
+    // Functional slider for rectangle resizing
     JSlider topSlider;
     JSlider bottomSlider;
+    
+    // Non-functional sliders which will reside in the east panel?
+    JSlider redTopSlider;
+    JSlider redBottomSlider;
     // TODO Ratio of Rectangle Measures
     public static final double INITIAL_TOP_RECTANGLE_VALUE = 1.0;
     public static final double INITIAL_BOTTOM_RECTANGLE_VALUE = 1.0;
+    
+    // Border Titles for East and West panel
+    public static final String westPanelTitle = "Red Sliders";
+    public static final String eastPanelTitle = "Ratio";
     
     // Length of text Fields
     public static final int LENGTH_OF_TEXT_FIELD = 3;
@@ -69,14 +82,13 @@ public class MeasureRectangle extends JApplet {
     	
     	Container container = getContentPane();
         canvas = new RectanglesCanvas();
-        gridComponent = new GridComponent(10);
         
         //canvas.add(gridComponent);
         container.add(canvas);
         
-        JPanel belowPanel = new JPanel();
+        bottomPanel = new JPanel();
         TitledBorder southBorder = new TitledBorder("Change the ratio of below rectangle");
-        belowPanel.setBorder(southBorder);
+        bottomPanel.setBorder(southBorder);
         JLabel label = new JLabel("Below Rectangle: ", JLabel.RIGHT);
         bottomSlider = new JSlider(JSlider.HORIZONTAL, MIN_SLIDER, 
         									MAX_SLIDER, INITIAL_SLIDER);
@@ -87,15 +99,15 @@ public class MeasureRectangle extends JApplet {
         bottomATextField = new JTextField("aTextField");
         bottomBTextField = new JTextField("bTextField");
 
-        belowPanel.add(label);
-        belowPanel.add(bottomSlider);
-        belowPanel.add(bottomTextField);
-        belowPanel.add(bottomATextField);
-        belowPanel.add(bottomBTextField);
+        bottomPanel.add(label);
+        bottomPanel.add(bottomSlider);
+        bottomPanel.add(bottomTextField);
+        bottomPanel.add(bottomATextField);
+        bottomPanel.add(bottomBTextField);
 
-        container.add(BorderLayout.SOUTH, belowPanel);
+        container.add(BorderLayout.SOUTH, bottomPanel);
         
-        JPanel topPanel = new JPanel();
+        topPanel = new JPanel();
         TitledBorder topBorder = new TitledBorder("Change the ratio of above rectangle");
         topPanel.setBorder(topBorder);
 
@@ -268,10 +280,18 @@ public class MeasureRectangle extends JApplet {
         
         topRectangleMeasure.setPreferredSize(new Dimension(10, 50));
         bottomRectangleMeasure.setPreferredSize(new Dimension(10, 50));
-        JPanel westPanel = new JPanel();
-        westPanel.setPreferredSize(new Dimension(50, 50));
-        TitledBorder westBorder = new TitledBorder("Ratio");
         
+        westPanel = new JPanel();
+        eastPanel = new JPanel();
+        
+        westPanel.setPreferredSize(new Dimension(50, 50));
+        //eastPanel.setPreferredSize(new Dimension(50, 50));
+        
+        TitledBorder westBorder = new TitledBorder(westPanelTitle);
+        TitledBorder eastBorder = new TitledBorder(eastPanelTitle);
+        
+        
+        // WEST PANEL DESIGN
         westPanel.setBorder(westBorder);
         westPanel.setLayout(new GridLayout(0,1));
         westPanel.add(topRectangleMeasure);
@@ -280,8 +300,39 @@ public class MeasureRectangle extends JApplet {
         westPanel.add(SEPARATOR);
         westPanel.add(SEPARATOR);
         westPanel.add(bottomRectangleMeasure);        
+        
+        // Initialize the non-functional sliders in the east panel
+        redTopSlider = new JSlider(JSlider.HORIZONTAL, MIN_SLIDER, 
+				MAX_SLIDER, INITIAL_SLIDER);
+        redTopSlider.addChangeListener(new SliderListener());
+        
+        redBottomSlider = new JSlider(JSlider.HORIZONTAL, MIN_SLIDER, 
+				MAX_SLIDER, INITIAL_SLIDER);
+        redBottomSlider.addChangeListener(new SliderListener());
+        
+        // EAST PANEL DESIGN
+        eastPanel.setBorder(eastBorder);
+        eastPanel.setLayout(new GridLayout(0, 1));
+        eastPanel.add(redTopSlider);
+        eastPanel.add(SEPARATOR);
+        eastPanel.add(redBottomSlider);
+        
+        container.add(BorderLayout.EAST, eastPanel);
         container.add(BorderLayout.WEST, westPanel);
+        
+       
+        
+        
+        
+        
+        
+        
+        
         this.setSize(INITIAL_WIDTH, INITIAL_HEIGHT);
+
+        // GRID
+        Grids grid = new Grids(200, 200, 2, 10);
+	    add(grid);
         
         this.addComponentListener(new ComponentAdapter() {
         	  public void componentResized(ComponentEvent event) {
