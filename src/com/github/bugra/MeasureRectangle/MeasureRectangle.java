@@ -97,14 +97,6 @@ public class MeasureRectangle extends JApplet {
         bottomATextField = new JTextField("aTextField");
         bottomBTextField = new JTextField("bTextField");
 
-        bottomPanel.add(label);
-        bottomPanel.add(bottomSlider);
-        bottomPanel.add(bottomTextField);
-        bottomPanel.add(bottomATextField);
-        bottomPanel.add(bottomBTextField);
-
-        
-        
         topPanel = new JPanel();
         TitledBorder topBorder = new TitledBorder("Change the ratio of above rectangle");
         topPanel.setBorder(topBorder);
@@ -121,19 +113,13 @@ public class MeasureRectangle extends JApplet {
         topATextField = new JTextField("aTextField");
         topBTextField = new JTextField("bTextField");
 
-        topPanel.add(topLabel);
-        topPanel.add(topSlider);
-        topPanel.add(topTextField);
-        topPanel.add(topATextField);
-        topPanel.add(topBTextField);
         
-        // INITIALIZATION
+        // INITIALIZATION of the components
         tempWidth = (int) (bottomSlider.getValue() / (double)MAX_SLIDER);
         canvas.setTopRectangleWidth((int) ((canvas.getWidthCanvas() - 
 					(2 * RectanglesCanvas.posXTopRectangle)) * tempWidth));
  		canvas.setBottomRectangleWidth((int) ((canvas.getWidthCanvas() - 
 					(2 * RectanglesCanvas.posXTopRectangle)) * tempWidth));
-
  		
         topRectangleMeasure = new JTextField();
         topRectangleMeasure.setText(INITIAL_VALUE_LABEL);
@@ -288,17 +274,6 @@ public class MeasureRectangle extends JApplet {
         TitledBorder westBorder = new TitledBorder(westPanelTitle);
         TitledBorder eastBorder = new TitledBorder(eastPanelTitle);
         
-        
-        // WEST PANEL DESIGN
-        westPanel.setBorder(westBorder);
-        westPanel.setLayout(new GridLayout(0,1));
-        westPanel.add(topRectangleMeasure);
-        westPanel.add(SEPARATOR);
-        westPanel.add(SEPARATOR);
-        westPanel.add(SEPARATOR);
-        westPanel.add(SEPARATOR);
-        westPanel.add(bottomRectangleMeasure);        
-        
         // Initialize the non-functional sliders in the east panel
         redTopSlider = new JSlider(JSlider.HORIZONTAL, MIN_SLIDER, 
 				MAX_SLIDER, INITIAL_SLIDER);
@@ -308,24 +283,49 @@ public class MeasureRectangle extends JApplet {
 				MAX_SLIDER, INITIAL_SLIDER);
         redBottomSlider.addChangeListener(new SliderListener());
         
-        // EAST PANEL DESIGN
+        // Elements of Bottom Panel
+        bottomPanel.add(label);
+        bottomPanel.add(bottomSlider);
+        bottomPanel.add(bottomTextField);
+        bottomPanel.add(bottomATextField);
+        bottomPanel.add(bottomBTextField);
+        bottomPanel.add(redBottomSlider);
+        
+        // Elements of Top Panel
+        //topPanel.setLayout(new GridLayout(2, 3));
+        topPanel.add(topLabel);
+        topPanel.add(topSlider);
+        topPanel.add(topLabel);
+        topPanel.add(topTextField);
+        topPanel.add(topATextField);
+        topPanel.add(topBTextField);
+        topPanel.add(redTopSlider);
+        
+        // Elements of West Panel
+        westPanel.setBorder(westBorder);
+        westPanel.setLayout(new GridLayout(0, 1));
+        westPanel.add(topRectangleMeasure);
+        westPanel.add(SEPARATOR);
+        westPanel.add(SEPARATOR);
+        westPanel.add(SEPARATOR);
+        westPanel.add(SEPARATOR);
+        westPanel.add(bottomRectangleMeasure);
+        
+        // Elements of East Panel
         eastPanel.setBorder(eastBorder);
         eastPanel.setLayout(new GridLayout(0, 1));
         //eastPanel.add(redTopSlider);
         //eastPanel.add(SEPARATOR);
         //eastPanel.add(redBottomSlider);
         
-        bottomPanel.add(redBottomSlider);
-        topPanel.add(redTopSlider);
-        
-        
         //canvas.add(gridComponent);
         // Add the canvas into the container
         container.add(canvas);
+        
         // Add the panels into the container
         container.add(BorderLayout.SOUTH, bottomPanel);
         container.add(BorderLayout.NORTH, topPanel);
-        container.add(BorderLayout.EAST, eastPanel);
+        //container.add(BorderLayout.EAST, eastPanel);
         container.add(BorderLayout.WEST, westPanel);
         
        
