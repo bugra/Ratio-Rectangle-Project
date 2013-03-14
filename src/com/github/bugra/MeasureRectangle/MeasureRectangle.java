@@ -52,6 +52,7 @@ public class MeasureRectangle extends JApplet {
     // Non-functional sliders which will reside in the east panel?
     JSlider redTopSlider;
     JSlider redBottomSlider;
+    
     // TODO Ratio of Rectangle Measures
     public static final double INITIAL_TOP_RECTANGLE_VALUE = 1.0;
     public static final double INITIAL_BOTTOM_RECTANGLE_VALUE = 1.0;
@@ -71,12 +72,14 @@ public class MeasureRectangle extends JApplet {
     public static final String INITIAL_VALUE_LABEL = "1";
     
     private final int MIN_SLIDER = 0;
-    private final int MAX_SLIDER = 100;
-    private final int INITIAL_SLIDER = 10;
+    private final int MAX_SLIDER = 10;
+    private final int INITIAL_SLIDER = 1;
     
     private final int INITIAL_WIDTH = 800;
     private final int INITIAL_HEIGHT = 600;
     
+    public static final int MAJOR_TICK_SPACING = 10;
+    public static final int MINOR_TICK_SPACING = 1;
     // Initial value of sliders
     double tempWidth = 0.5;
 
@@ -108,6 +111,12 @@ public class MeasureRectangle extends JApplet {
         								MAX_SLIDER, INITIAL_SLIDER);
         
         topSlider.addChangeListener(new SliderListener());
+        topSlider.setMajorTickSpacing(MAJOR_TICK_SPACING);
+        topSlider.setMinorTickSpacing(MINOR_TICK_SPACING);
+        topSlider.setPaintLabels(true);
+        topSlider.setPaintTicks(true);
+        topSlider.setPaintTrack(true);
+        
         topTextField = new JTextField(Double.toString((double) INITIAL_SLIDER / MAX_SLIDER), 
         									LENGTH_OF_TEXT_FIELD);
         
@@ -376,6 +385,7 @@ public class MeasureRectangle extends JApplet {
 	 		canvas.setBottomRectangleWidth(width);
 	 		topSlider.setToolTipText(String.valueOf(tempSlider.getValue()));
 	 		System.out.println(topSlider.getToolTipText());
+	 		System.out.println(topSlider.getPaintLabels());
             canvas.repaint();
         }
     }
