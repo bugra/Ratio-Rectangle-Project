@@ -1,6 +1,7 @@
 package com.github.bugra.MeasureRectangle;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -72,13 +73,13 @@ public class MeasureRectangle extends JApplet {
     public static final String INITIAL_VALUE_LABEL = "1";
     
     private final int MIN_SLIDER = 0;
-    private final int MAX_SLIDER = 10;
+    private final int MAX_SLIDER = 20;
     private final int INITIAL_SLIDER = 1;
     
     private final int INITIAL_WIDTH = 800;
     private final int INITIAL_HEIGHT = 600;
     
-    public static final int MAJOR_TICK_SPACING = 10;
+    public static final int MAJOR_TICK_SPACING = 1;
     public static final int MINOR_TICK_SPACING = 1;
     // Initial value of sliders
     double tempWidth = 0.5;
@@ -116,6 +117,7 @@ public class MeasureRectangle extends JApplet {
         topSlider.setPaintLabels(true);
         topSlider.setPaintTicks(true);
         topSlider.setPaintTrack(true);
+        //topSlider.setSnapToTicks(true);
         
         topTextField = new JTextField(Double.toString((double) INITIAL_SLIDER / MAX_SLIDER), 
         									LENGTH_OF_TEXT_FIELD);
@@ -338,19 +340,13 @@ public class MeasureRectangle extends JApplet {
         //container.add(BorderLayout.EAST, eastPanel);
         container.add(BorderLayout.WEST, westPanel);
         
-       
-        
-        
-        
-        
-        
-        
         
         this.setSize(INITIAL_WIDTH, INITIAL_HEIGHT);
 
+        // TODO
         // GRID
-        Grids grid = new Grids(200, 200, 2, 10);
-	    add(grid);
+        //Grids grid = new Grids(200, 200, 2, 10);
+	    //add(grid);
         
         this.addComponentListener(new ComponentAdapter() {
         	  public void componentResized(ComponentEvent event) {
@@ -368,6 +364,7 @@ public class MeasureRectangle extends JApplet {
     class SliderListener implements ChangeListener {
         public void stateChanged(ChangeEvent e) {
         	canvas.setSizeCanvas(canvas.getSize());
+        	System.out.println(e.toString());
             JSlider tempSlider = (JSlider) e.getSource();
             tempWidth = (tempSlider.getValue() / (double)MAX_SLIDER);
             topSlider.setValue(tempSlider.getValue());
