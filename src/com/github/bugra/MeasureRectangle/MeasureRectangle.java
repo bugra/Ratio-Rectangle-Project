@@ -7,10 +7,13 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.text.DecimalFormat;
 
 import javax.swing.JApplet;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -54,13 +57,16 @@ public class MeasureRectangle extends JApplet {
     JSlider redTopSlider;
     JSlider redBottomSlider;
     
+    JCheckBox topCheckBox;
+    JCheckBox bottomCheckBox;
+    
     // TODO Ratio of Rectangle Measures
     public static final double INITIAL_TOP_RECTANGLE_VALUE = 1.0;
     public static final double INITIAL_BOTTOM_RECTANGLE_VALUE = 1.0;
     
     // Border Titles for East and West panel
-    public static final String westPanelTitle = "Red Sliders";
-    public static final String eastPanelTitle = "Ratio";
+    public static final String westPanelTitle = "Ratio";
+    public static final String eastPanelTitle = "Red Sliders";
     
     // Length of text Fields
     public static final int LENGTH_OF_TEXT_FIELD = 3;
@@ -73,7 +79,7 @@ public class MeasureRectangle extends JApplet {
     public static final String INITIAL_VALUE_LABEL = "1";
     
     private final int MIN_SLIDER = 0;
-    private final int MAX_SLIDER = 20;
+    private final int MAX_SLIDER = 100;
     private final int INITIAL_SLIDER = 1;
     
     private final int INITIAL_WIDTH = 800;
@@ -99,6 +105,19 @@ public class MeasureRectangle extends JApplet {
         
         bottomTextField = new JTextField(Double.toString((double) INITIAL_SLIDER / MAX_SLIDER), 
         									LENGTH_OF_TEXT_FIELD);
+        bottomCheckBox =  new JCheckBox();
+        bottomCheckBox.addItemListener(
+        		new ItemListener() {
+					public void itemStateChanged(ItemEvent e) {
+						if (e.getStateChange() == ItemEvent.SELECTED){
+							bottomTextField.setVisible(false);
+						}
+						else{
+							bottomTextField.setVisible(true);
+						}
+						
+					}
+				});
         bottomATextField = new JTextField("aTextField");
         bottomBTextField = new JTextField("bTextField");
 
@@ -112,15 +131,28 @@ public class MeasureRectangle extends JApplet {
         								MAX_SLIDER, INITIAL_SLIDER);
         
         topSlider.addChangeListener(new SliderListener());
-        topSlider.setMajorTickSpacing(MAJOR_TICK_SPACING);
-        topSlider.setMinorTickSpacing(MINOR_TICK_SPACING);
-        topSlider.setPaintLabels(true);
-        topSlider.setPaintTicks(true);
-        topSlider.setPaintTrack(true);
+        //topSlider.setMajorTickSpacing(MAJOR_TICK_SPACING);
+        //topSlider.setMinorTickSpacing(MINOR_TICK_SPACING);
+        //topSlider.setPaintLabels(true);
+        //topSlider.setPaintTicks(true);
+        //topSlider.setPaintTrack(true);
         //topSlider.setSnapToTicks(true);
         
         topTextField = new JTextField(Double.toString((double) INITIAL_SLIDER / MAX_SLIDER), 
         									LENGTH_OF_TEXT_FIELD);
+        topCheckBox =  new JCheckBox();
+        topCheckBox.addItemListener(
+        		new ItemListener() {
+					public void itemStateChanged(ItemEvent e) {
+						if (e.getStateChange() == ItemEvent.SELECTED){
+							topTextField.setVisible(false);
+						}
+						else{
+							topTextField.setVisible(true);
+						}
+						
+					}
+				});
         
         topATextField = new JTextField("aTextField");
         topBTextField = new JTextField("bTextField");
@@ -299,6 +331,7 @@ public class MeasureRectangle extends JApplet {
         bottomPanel.add(label);
         bottomPanel.add(bottomSlider);
         bottomPanel.add(bottomTextField);
+        bottomPanel.add(bottomCheckBox);
         bottomPanel.add(bottomATextField);
         bottomPanel.add(bottomBTextField);
         bottomPanel.add(redBottomSlider);
@@ -309,6 +342,7 @@ public class MeasureRectangle extends JApplet {
         topPanel.add(topSlider);
         topPanel.add(topLabel);
         topPanel.add(topTextField);
+        topPanel.add(topCheckBox);
         topPanel.add(topATextField);
         topPanel.add(topBTextField);
         topPanel.add(redTopSlider);

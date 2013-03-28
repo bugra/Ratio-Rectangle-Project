@@ -34,6 +34,7 @@ class RectanglesCanvas extends Canvas {
         private double topRectangleValue = MeasureRectangle.INITIAL_BOTTOM_RECTANGLE_VALUE;
         private double bottomRectangleValue = MeasureRectangle.INITIAL_TOP_RECTANGLE_VALUE;
         
+        private final float RECTANGLE_THICKNESS = 1f; 
         // Constructor
         RectanglesCanvas() {
 
@@ -49,15 +50,8 @@ class RectanglesCanvas extends Canvas {
 
         public void paint(Graphics g) {
 
-            // 2D graphics context
-
             Graphics2D g2D = (Graphics2D) g;
-
-            // Stroke for bold lines 
-
-            g2D.setStroke(new BasicStroke(5.0f));
-
-            // Draw rectangles
+            g2D.setStroke(new BasicStroke(RECTANGLE_THICKNESS));
 
             g2D.draw(topRectangle);
             g2D.draw(bottomRectangle);
