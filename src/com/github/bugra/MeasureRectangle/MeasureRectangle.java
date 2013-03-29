@@ -10,6 +10,8 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.text.DecimalFormat;
 
 import javax.swing.JApplet;
@@ -17,6 +19,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
@@ -63,6 +66,9 @@ public class MeasureRectangle extends JApplet {
     JLabel topLabel;
     JLabel bottomLabel;
     
+    JPopupMenu pop;
+    JLabel labelPop;
+    
     // TODO Ratio of Rectangle Measures
     public static final double INITIAL_TOP_RECTANGLE_VALUE = 1.0;
     public static final double INITIAL_BOTTOM_RECTANGLE_VALUE = 1.0;
@@ -97,6 +103,8 @@ public class MeasureRectangle extends JApplet {
 
     public void init() {
     	
+    	
+    	
     	container = getContentPane();
         canvas = new RectanglesCanvas();
         
@@ -130,7 +138,7 @@ public class MeasureRectangle extends JApplet {
         TitledBorder topBorder = new TitledBorder("Change the ratio of above rectangle");
         topPanel.setBorder(topBorder);
 
-        topLabel = new JLabel("Above Rectangle", JLabel.RIGHT);
+        topLabel = new JLabel("",SwingConstants.CENTER);
 
         topSlider = new JSlider(JSlider.HORIZONTAL, MIN_SLIDER, 
         								MAX_SLIDER, INITIAL_SLIDER);
@@ -138,6 +146,9 @@ public class MeasureRectangle extends JApplet {
         topSlider.addChangeListener(new SynchronousSliderListener());
         topSlider.setPreferredSize(INITIAL_SLIDER_DIMENSION);
         topSlider.setToolTipText(Integer.toString(topSlider.getValue()));
+        
+        
+        
         //topSlider.setMajorTickSpacing(MAJOR_TICK_SPACING);
         //topSlider.setMinorTickSpacing(MINOR_TICK_SPACING);
         //topSlider.setPaintLabels(true);
@@ -334,6 +345,12 @@ public class MeasureRectangle extends JApplet {
 				MAX_SLIDER, INITIAL_SLIDER);
         redBottomSlider.addChangeListener(new SynchronousSliderListener());
         
+        pop = new JPopupMenu();
+    	labelPop = new JLabel("", SwingConstants.CENTER);
+    	labelPop.setPreferredSize(new Dimension(30,12));
+    	pop.add(labelPop);
+        
+        
         // Elements of Bottom Panel
         //bottomPanel.add(bottomLabel);
         bottomPanel.add(bottomSlider);
@@ -347,6 +364,7 @@ public class MeasureRectangle extends JApplet {
         //topPanel.setLayout(new GridLayout(2, 3));
         //topPanel.add(topLabel);
         topPanel.add(topSlider);
+        topPanel.add(pop);
         //topPanel.add(topTextField);
         //topPanel.add(topCheckBox);
         //topPanel.add(topATextField);
@@ -403,7 +421,6 @@ public class MeasureRectangle extends JApplet {
     class SynchronousSliderListener implements ChangeListener {
         public void stateChanged(ChangeEvent e) {
         	canvas.setSizeCanvas(canvas.getSize());
-        	System.out.println(e.toString());
             JSlider tempSlider = (JSlider) e.getSource();
             tempWidth = (tempSlider.getValue() / (double)MAX_SLIDER);
             topSlider.setValue(tempSlider.getValue());
@@ -422,9 +439,6 @@ public class MeasureRectangle extends JApplet {
 	 		topSlider.setToolTipText(String.valueOf(tempSlider.getValue()));
 	 		bottomSlider.setToolTipText(String.valueOf(tempSlider.getValue()));
             canvas.repaint();
-        }
-        public String getToolTipText(MouseEvent event) {
-        	return "" + event.getX();
         }
     }
     
