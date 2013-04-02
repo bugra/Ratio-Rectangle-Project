@@ -15,6 +15,7 @@ import java.awt.event.MouseMotionListener;
 import java.text.DecimalFormat;
 
 import javax.swing.JApplet;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -50,6 +51,9 @@ public class MeasureRectangle extends JApplet {
     JTextField topIterationMeasure;
     JTextField bottomIterationMeasure;
     
+    JButton topUndoButton;
+    JButton bottomUndoButton;
+    
     JPanel topPanel;
     JPanel bottomPanel;
     JPanel westPanel;
@@ -81,6 +85,10 @@ public class MeasureRectangle extends JApplet {
     // Border Titles for East and West panel
     public static final String westPanelTitle = "WEST PANEL";
     public static final String eastPanelTitle = "Red Sliders";
+    
+    // UNDO BUTTON INITIALIZATION
+    public static final String TOP_UNDO_BUTTON_TEXT = "Undo Top";
+    public static final String BOTTOM_UNDO_BUTTON_TEXT = "Undo Bottom";
     
     // Length of text Fields
     public static final int LENGTH_OF_TEXT_FIELD = 3;
@@ -399,6 +407,9 @@ public class MeasureRectangle extends JApplet {
         	
         });
         
+        topUndoButton = new JButton(TOP_UNDO_BUTTON_TEXT);
+        bottomUndoButton = new JButton(BOTTOM_UNDO_BUTTON_TEXT);
+        
         topRectangleMeasure.setPreferredSize(new Dimension(10, 50));
         bottomRectangleMeasure.setPreferredSize(new Dimension(10, 50));
         
@@ -451,6 +462,8 @@ public class MeasureRectangle extends JApplet {
         westPanel.setLayout(new GridLayout(0, 1));
         westPanel.add(topRectangleMeasure);
         westPanel.add(topIterationMeasure);
+        westPanel.add(topUndoButton);
+        westPanel.add(bottomUndoButton);
         westPanel.add(bottomIterationMeasure);
         westPanel.add(bottomRectangleMeasure);
         
