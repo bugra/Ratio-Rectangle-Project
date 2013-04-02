@@ -69,7 +69,6 @@ public class MeasureRectangle extends JApplet {
     JPopupMenu pop;
     JLabel labelPop;
     
-    // TODO Ratio of Rectangle Measures
     public static final double INITIAL_TOP_RECTANGLE_VALUE = 1.0;
     public static final double INITIAL_BOTTOM_RECTANGLE_VALUE = 1.0;
     
@@ -114,7 +113,8 @@ public class MeasureRectangle extends JApplet {
         bottomLabel = new JLabel("Below Rectangle: ", JLabel.RIGHT);
         bottomSlider = new JSlider(JSlider.HORIZONTAL, MIN_SLIDER, 
         									MAX_SLIDER, INITIAL_SLIDER);
-        bottomSlider.addChangeListener(new SynchronousSliderListener());
+        //bottomSlider.addChangeListener(new SynchronousSliderListener());
+        bottomSlider.addChangeListener(new AsynchronousBottomSliderListener());
         
         bottomSlider.setPreferredSize( INITIAL_SLIDER_DIMENSION );
         bottomTextField = new JTextField(Double.toString((double) INITIAL_SLIDER / MAX_SLIDER), 
@@ -143,7 +143,8 @@ public class MeasureRectangle extends JApplet {
         topSlider = new JSlider(JSlider.HORIZONTAL, MIN_SLIDER, 
         								MAX_SLIDER, INITIAL_SLIDER);
         
-        topSlider.addChangeListener(new SynchronousSliderListener());
+        //topSlider.addChangeListener(new SynchronousSliderListener());
+        topSlider.addChangeListener(new AsynchronousTopSliderListener());
         topSlider.setPreferredSize(INITIAL_SLIDER_DIMENSION);
         topSlider.setToolTipText(Integer.toString(topSlider.getValue()));
         
@@ -416,6 +417,35 @@ public class MeasureRectangle extends JApplet {
      	 		 canvas.repaint();
         	  }
         });
+    }
+    
+    class AsynchronousTopSliderListener implements ChangeListener{
+    	public void stateChanged(ChangeEvent e){
+    		canvas.setSizeCanvas(canvas.getSize());
+    		JSlider tempSlider = (JSlider) e.getSource();
+    		tempWidth = (tempSlider.getValue() / (double)MAX_SLIDER);
+    		topSlider.setValue(tempSlider.getValue());
+    		int width = (int) ((canvas.getWidthCanvas() - 
+						(2 * RectanglesCanvas.posXTopRectangle)) * tempWidth);
+    		canvas.setTopRectangleWidth(width);
+    		topSlider.setToolTipText(String.valueOf(tempSlider.getValue()));
+    		canvas.repaint();
+    	}
+    	
+    }
+    
+    class AsynchronousBottomSliderListener implements ChangeListener{
+    	public void stateChanged(ChangeEvent e){
+    		canvas.setSizeCanvas(canvas.getSize());
+    		JSlider tempSlider = (JSlider) e.getSource();
+    		tempWidth = (tempSlider.getValue() / (double)MAX_SLIDER);
+    		bottomSlider.setValue(tempSlider.getValue());
+    		int width = (int) ((canvas.getWidthCanvas() - 
+					(2 * RectanglesCanvas.posXTopRectangle)) * tempWidth);
+    		canvas.setBottomRectangleWidth(width);
+    		bottomSlider.setToolTipText(String.valueOf(tempSlider.getValue()));
+    		canvas.repaint();
+    	}
     }
     
     class SynchronousSliderListener implements ChangeListener {
