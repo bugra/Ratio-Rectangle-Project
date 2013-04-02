@@ -37,10 +37,12 @@ public class MeasureRectangle extends JApplet {
 	RectanglesCanvas canvas;
     
     JTextField bottomTextField;
+    JTextField bottomIterationTextField;
     JTextField bottomATextField;
     JTextField bottomBTextField;
     
     JTextField topTextField;
+    JTextField topIterationTextField;
     JTextField topATextField;
     JTextField topBTextField;
     
@@ -73,7 +75,7 @@ public class MeasureRectangle extends JApplet {
     public static final double INITIAL_BOTTOM_RECTANGLE_VALUE = 1.0;
     
     // Border Titles for East and West panel
-    public static final String westPanelTitle = "Ratio";
+    public static final String westPanelTitle = "WEST PANEL";
     public static final String eastPanelTitle = "Red Sliders";
     
     // Length of text Fields
