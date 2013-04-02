@@ -37,17 +37,18 @@ public class MeasureRectangle extends JApplet {
 	RectanglesCanvas canvas;
     
     JTextField bottomTextField;
-    JTextField bottomIterationTextField;
+    
     JTextField bottomATextField;
     JTextField bottomBTextField;
     
     JTextField topTextField;
-    JTextField topIterationTextField;
     JTextField topATextField;
     JTextField topBTextField;
     
     JTextField topRectangleMeasure;
     JTextField bottomRectangleMeasure;
+    JTextField topIterationMeasure;
+    JTextField bottomIterationMeasure;
     
     JPanel topPanel;
     JPanel bottomPanel;
@@ -74,6 +75,9 @@ public class MeasureRectangle extends JApplet {
     public static final double INITIAL_TOP_RECTANGLE_VALUE = 1.0;
     public static final double INITIAL_BOTTOM_RECTANGLE_VALUE = 1.0;
     
+    public static final double INITIAL_TOP_ITERATION_MEASURE = 1.0;
+    public static final double INITIAL_BOTTOM_ITERATION_MEASURE = 1.0;
+    
     // Border Titles for East and West panel
     public static final String westPanelTitle = "WEST PANEL";
     public static final String eastPanelTitle = "Red Sliders";
@@ -85,6 +89,10 @@ public class MeasureRectangle extends JApplet {
     public static final JSeparator SEPARATOR = new JSeparator(SwingConstants.VERTICAL);
     private double topRectangleValue = INITIAL_TOP_RECTANGLE_VALUE;
     private double bottomRectangleValue = INITIAL_BOTTOM_RECTANGLE_VALUE;
+    private double topIterationValue;
+    private double bottomIterationValue;
+    private double previousTopIterationValue;
+    private double previousBottomIterationValue;
     
     public static final String INITIAL_VALUE_LABEL = "1";
     
@@ -186,146 +194,210 @@ public class MeasureRectangle extends JApplet {
  		canvas.setBottomRectangleWidth((int) ((canvas.getWidthCanvas() - 
 					(2 * RectanglesCanvas.posXTopRectangle)) * tempWidth));
  		
+ 		
         topRectangleMeasure = new JTextField();
+        topIterationMeasure = new JTextField();
+        
         topRectangleMeasure.setText(INITIAL_VALUE_LABEL);
+        topIterationMeasure.setText(String.valueOf(INITIAL_TOP_ITERATION_MEASURE));
+        
         topRectangleMeasure.getDocument().addDocumentListener(new DocumentListener() {
-        	  
         	  public void changedUpdate(DocumentEvent e) {
-        		  topRectangleValue = Double.parseDouble(topRectangleMeasure.getText());
-        		  canvas.setTopRectangleValue(topRectangleValue);
-        		  canvas.setBottomRectangleValue(bottomRectangleValue);
-        		  canvas.setSizeCanvas(canvas.getSize());
-        		  canvas.setBottomRectangleYPosition(RectanglesCanvas.posYTopRectangle +
-							canvas.getTopRectangleHeight() + 
-							canvas.getSpacingBetweenRectangles());
-        		  canvas.setTopRectangleHeight(canvas.getTopRectangleHeight());
-        		  canvas.setBottomRectangleHeight(canvas.getBottomRectangleHeight());
-        		  tempWidth = (bottomSlider.getValue() / (double) MAX_SLIDER);
-        		  double ratioOfRectangles = canvas.getTopRectangleValue() / 
-   					   canvas.getBottomRectangleValue();
-        		  bottomTextField.setText(DECIMAL_FORMAT.format((tempWidth * MAX_SLIDER)));
-        		  topTextField.setText(DECIMAL_FORMAT.format((ratioOfRectangles * tempWidth * MAX_SLIDER)));
-        		  canvas.repaint();
-        		  //warn();
+        		  if (topRectangleMeasure.getText() != null & !topRectangleMeasure.getText().equals(" ")){
+	        		  topRectangleValue = Double.parseDouble(topRectangleMeasure.getText());
+	        		  canvas.setTopRectangleValue(topRectangleValue);
+	        		  canvas.setBottomRectangleValue(bottomRectangleValue);
+	        		  canvas.setSizeCanvas(canvas.getSize());
+	        		  canvas.setBottomRectangleYPosition(RectanglesCanvas.posYTopRectangle +
+								canvas.getTopRectangleHeight() + 
+								canvas.getSpacingBetweenRectangles());
+	        		  canvas.setTopRectangleHeight(canvas.getTopRectangleHeight());
+	        		  canvas.setBottomRectangleHeight(canvas.getBottomRectangleHeight());
+	        		  tempWidth = (bottomSlider.getValue() / (double) MAX_SLIDER);
+	        		  double ratioOfRectangles = canvas.getTopRectangleValue() / 
+	   					   canvas.getBottomRectangleValue();
+	        		  bottomTextField.setText(DECIMAL_FORMAT.format((tempWidth * MAX_SLIDER)));
+	        		  topTextField.setText(DECIMAL_FORMAT.format((ratioOfRectangles * tempWidth * MAX_SLIDER)));
+	        		  canvas.repaint();
+        		  }
         	  }
         	  
         	  public void removeUpdate(DocumentEvent e) {
-        		  topRectangleValue = Double.parseDouble(topRectangleMeasure.getText());  
-        		  canvas.setTopRectangleValue(topRectangleValue);
-        		  canvas.setBottomRectangleValue(bottomRectangleValue);
-        		  canvas.setSizeCanvas(canvas.getSize());
-        		  canvas.setBottomRectangleYPosition(RectanglesCanvas.posYTopRectangle +
-							canvas.getTopRectangleHeight() + 
-							canvas.getSpacingBetweenRectangles());
-        		  canvas.setTopRectangleHeight(canvas.getTopRectangleHeight());
-        		  canvas.setBottomRectangleHeight(canvas.getBottomRectangleHeight());
-        		  tempWidth = (bottomSlider.getValue() / (double) MAX_SLIDER);
-        		  double ratioOfRectangles = canvas.getTopRectangleValue() / 
-   					   canvas.getBottomRectangleValue();
-        		  bottomTextField.setText(Double.toString(tempWidth * MAX_SLIDER));
-        		  topTextField.setText(DECIMAL_FORMAT.format((ratioOfRectangles * tempWidth * MAX_SLIDER)));
-        		  canvas.repaint();
-        		  warn();
+        		  if (topRectangleMeasure.getText() != null & topRectangleMeasure.getText().equals(" ")){
+        			  System.out.println(topRectangleMeasure.getText());
+	        		  topRectangleValue = Double.parseDouble(topRectangleMeasure.getText());  
+	        		  canvas.setTopRectangleValue(topRectangleValue);
+	        		  canvas.setBottomRectangleValue(bottomRectangleValue);
+	        		  canvas.setSizeCanvas(canvas.getSize());
+	        		  canvas.setBottomRectangleYPosition(RectanglesCanvas.posYTopRectangle +
+								canvas.getTopRectangleHeight() + 
+								canvas.getSpacingBetweenRectangles());
+	        		  canvas.setTopRectangleHeight(canvas.getTopRectangleHeight());
+	        		  canvas.setBottomRectangleHeight(canvas.getBottomRectangleHeight());
+	        		  tempWidth = (bottomSlider.getValue() / (double) MAX_SLIDER);
+	        		  double ratioOfRectangles = canvas.getTopRectangleValue() / 
+	   					   canvas.getBottomRectangleValue();
+	        		  bottomTextField.setText(Double.toString(tempWidth * MAX_SLIDER));
+	        		  topTextField.setText(DECIMAL_FORMAT.format((ratioOfRectangles * tempWidth * MAX_SLIDER)));
+	        		  canvas.repaint();
+        		  }
         	  }
         	  
         	  public void insertUpdate(DocumentEvent e) {
-        		  topRectangleValue = Double.parseDouble(topRectangleMeasure.getText());  
-        		  canvas.setTopRectangleValue(topRectangleValue);
-        		  canvas.setBottomRectangleValue(bottomRectangleValue);
-        		  canvas.setSizeCanvas(canvas.getSize());
-        		  canvas.setBottomRectangleYPosition(RectanglesCanvas.posYTopRectangle +
-							canvas.getTopRectangleHeight() + 
-							canvas.getSpacingBetweenRectangles());
-        		  canvas.setTopRectangleHeight(canvas.getTopRectangleHeight());
-        		  canvas.setBottomRectangleHeight(canvas.getBottomRectangleHeight());
-        		  tempWidth = (bottomSlider.getValue() / (double) MAX_SLIDER);
-        		  double ratioOfRectangles = canvas.getTopRectangleValue() / 
-   					   canvas.getBottomRectangleValue();
-        		  bottomTextField.setText(DECIMAL_FORMAT.format((tempWidth * MAX_SLIDER)));
-        		  topTextField.setText(DECIMAL_FORMAT.format((ratioOfRectangles * tempWidth * MAX_SLIDER)));
-        		  canvas.repaint();
-        		  //warn();
-        	  }
-        	  
-        	  public void warn() {
-        	   	  if (Integer.parseInt(topRectangleMeasure.getText()) <= 0){
-        	   		  JOptionPane.showMessageDialog(null,
-        	   				  "Error: Please enter number bigger than 0", "Error Massage",
-        	          JOptionPane.ERROR_MESSAGE);
-        	     }
+        		  if (topRectangleMeasure.getText() != null & !topRectangleMeasure.getText().equals(" ")){
+	        		  topRectangleValue = Double.parseDouble(topRectangleMeasure.getText());  
+	        		  canvas.setTopRectangleValue(topRectangleValue);
+	        		  canvas.setBottomRectangleValue(bottomRectangleValue);
+	        		  canvas.setSizeCanvas(canvas.getSize());
+	        		  canvas.setBottomRectangleYPosition(RectanglesCanvas.posYTopRectangle +
+								canvas.getTopRectangleHeight() + 
+								canvas.getSpacingBetweenRectangles());
+	        		  canvas.setTopRectangleHeight(canvas.getTopRectangleHeight());
+	        		  canvas.setBottomRectangleHeight(canvas.getBottomRectangleHeight());
+	        		  tempWidth = (bottomSlider.getValue() / (double) MAX_SLIDER);
+	        		  double ratioOfRectangles = canvas.getTopRectangleValue() / 
+	   					   canvas.getBottomRectangleValue();
+	        		  bottomTextField.setText(DECIMAL_FORMAT.format((tempWidth * MAX_SLIDER)));
+	        		  topTextField.setText(DECIMAL_FORMAT.format((ratioOfRectangles * tempWidth * MAX_SLIDER)));
+	        		  canvas.repaint();
+        		  }
         	  }
         	});
         
+        topIterationMeasure.getDocument().addDocumentListener(new DocumentListener() {
+			public void changedUpdate(DocumentEvent arg0) {
+				if (topIterationMeasure.getText() != null & !topIterationMeasure.getText().equals(" ")){ 
+					topIterationValue = Double.parseDouble(topIterationMeasure.getText());
+					int width = (int) ((canvas.getWidthCanvas() - 
+							(2 * RectanglesCanvas.posXTopRectangle)) * topIterationValue);
+		    		canvas.setTopRectangleWidth(width/MAX_SLIDER);
+		    		canvas.repaint();
+				}
+			}
+
+			public void insertUpdate(DocumentEvent arg0) {
+				if (topIterationMeasure.getText() != null & !topIterationMeasure.getText().equals(" ")){
+					topIterationValue = Double.parseDouble(topIterationMeasure.getText());
+					int width = (int) ((canvas.getWidthCanvas() - 
+							(2 * RectanglesCanvas.posXTopRectangle)) * topIterationValue);
+		    		canvas.setTopRectangleWidth(width/MAX_SLIDER);
+		    		canvas.repaint();
+				}
+			}
+
+			public void removeUpdate(DocumentEvent arg0) throws NumberFormatException {
+				if (topIterationMeasure.getText() != null & topIterationMeasure.getText().equals(" ")){ 
+					topIterationValue = Double.parseDouble(topIterationMeasure.getText());
+					int width = (int) ((canvas.getWidthCanvas() - 
+							(2 * RectanglesCanvas.posXTopRectangle)) * topIterationValue);
+		    		canvas.setTopRectangleWidth(width/MAX_SLIDER);
+		    		canvas.repaint();
+				}
+			}
+        	
+        });
+        
+        
         bottomRectangleMeasure = new JTextField();
+        bottomIterationMeasure = new JTextField();
+        
         bottomRectangleMeasure.setText(INITIAL_VALUE_LABEL);
+        bottomIterationMeasure.setText(String.valueOf(INITIAL_BOTTOM_ITERATION_MEASURE));
+        
         bottomRectangleMeasure.getDocument().addDocumentListener(new DocumentListener() {
-        	  
         	  public void changedUpdate(DocumentEvent e) {
-        		  bottomRectangleValue = Double.parseDouble(bottomRectangleMeasure.getText());
-        		  canvas.setBottomRectangleValue(bottomRectangleValue);
-        		  canvas.setTopRectangleValue(topRectangleValue);
-        		  canvas.setSizeCanvas(canvas.getSize());
-        		  canvas.setBottomRectangleYPosition(RectanglesCanvas.posYTopRectangle +
-							canvas.getTopRectangleHeight() + 
-							canvas.getSpacingBetweenRectangles());
-        		  canvas.setTopRectangleHeight(canvas.getTopRectangleHeight());
-        		  canvas.setBottomRectangleHeight(canvas.getBottomRectangleHeight());
-        		  tempWidth = (bottomSlider.getValue() / (double) MAX_SLIDER);
-        		  double ratioOfRectangles = canvas.getTopRectangleValue() / 
-   					   canvas.getBottomRectangleValue();
-        		  bottomTextField.setText(DECIMAL_FORMAT.format((tempWidth * MAX_SLIDER)));
-        		  topTextField.setText(DECIMAL_FORMAT.format((ratioOfRectangles * tempWidth * MAX_SLIDER)));
-        		  canvas.repaint();
-        		  //warn();
+        		  if (bottomRectangleMeasure.getText() != null & !bottomRectangleMeasure.getText().equals(" ")){ 
+	        		  bottomRectangleValue = Double.parseDouble(bottomRectangleMeasure.getText());
+	        		  canvas.setBottomRectangleValue(bottomRectangleValue);
+	        		  canvas.setTopRectangleValue(topRectangleValue);
+	        		  canvas.setSizeCanvas(canvas.getSize());
+	        		  canvas.setBottomRectangleYPosition(RectanglesCanvas.posYTopRectangle +
+								canvas.getTopRectangleHeight() + 
+								canvas.getSpacingBetweenRectangles());
+	        		  canvas.setTopRectangleHeight(canvas.getTopRectangleHeight());
+	        		  canvas.setBottomRectangleHeight(canvas.getBottomRectangleHeight());
+	        		  tempWidth = (bottomSlider.getValue() / (double) MAX_SLIDER);
+	        		  double ratioOfRectangles = canvas.getTopRectangleValue() / 
+	   					   canvas.getBottomRectangleValue();
+	        		  bottomTextField.setText(DECIMAL_FORMAT.format((tempWidth * MAX_SLIDER)));
+	        		  topTextField.setText(DECIMAL_FORMAT.format((ratioOfRectangles * tempWidth * MAX_SLIDER)));
+	        		  canvas.repaint();
+        		  }
         	  }
         	  
         	  public void removeUpdate(DocumentEvent e) {
-        		  bottomRectangleValue = Double.parseDouble(bottomRectangleMeasure.getText());  
-        		  canvas.setBottomRectangleValue(bottomRectangleValue);
-        		  canvas.setTopRectangleValue(topRectangleValue);
-        		  canvas.setSizeCanvas(canvas.getSize());
-        		  canvas.setBottomRectangleYPosition(RectanglesCanvas.posYTopRectangle +
-							canvas.getTopRectangleHeight() + 
-							canvas.getSpacingBetweenRectangles());
-        		  canvas.setTopRectangleHeight(canvas.getTopRectangleHeight());
-        		  canvas.setBottomRectangleHeight(canvas.getBottomRectangleHeight());
-        		  tempWidth = (bottomSlider.getValue() / (double) MAX_SLIDER);
-        		  double ratioOfRectangles = canvas.getTopRectangleValue() / 
-   					   canvas.getBottomRectangleValue();
-        		  bottomTextField.setText(DECIMAL_FORMAT.format((tempWidth * MAX_SLIDER)));
-        		  topTextField.setText(DECIMAL_FORMAT.format((ratioOfRectangles * tempWidth * MAX_SLIDER)));
-        		  canvas.repaint();
-        		  warn();
+        		  if (bottomRectangleMeasure.getText() != null & bottomRectangleMeasure.getText().equals(" ")){
+	        		  bottomRectangleValue = Double.parseDouble(bottomRectangleMeasure.getText());  
+	        		  canvas.setBottomRectangleValue(bottomRectangleValue);
+	        		  canvas.setTopRectangleValue(topRectangleValue);
+	        		  canvas.setSizeCanvas(canvas.getSize());
+	        		  canvas.setBottomRectangleYPosition(RectanglesCanvas.posYTopRectangle +
+								canvas.getTopRectangleHeight() + 
+								canvas.getSpacingBetweenRectangles());
+	        		  canvas.setTopRectangleHeight(canvas.getTopRectangleHeight());
+	        		  canvas.setBottomRectangleHeight(canvas.getBottomRectangleHeight());
+	        		  tempWidth = (bottomSlider.getValue() / (double) MAX_SLIDER);
+	        		  double ratioOfRectangles = canvas.getTopRectangleValue() / 
+	   					   canvas.getBottomRectangleValue();
+	        		  bottomTextField.setText(DECIMAL_FORMAT.format((tempWidth * MAX_SLIDER)));
+	        		  topTextField.setText(DECIMAL_FORMAT.format((ratioOfRectangles * tempWidth * MAX_SLIDER)));
+	        		  canvas.repaint();
+        		  }
         	  }
         	  
         	  public void insertUpdate(DocumentEvent e) {
-        		  bottomRectangleValue = Double.parseDouble(bottomRectangleMeasure.getText());
-        		  canvas.setBottomRectangleValue(bottomRectangleValue);
-        		  canvas.setTopRectangleValue(topRectangleValue);
-        		  canvas.setSizeCanvas(canvas.getSize());
-        		  canvas.setBottomRectangleYPosition(RectanglesCanvas.posYTopRectangle +
-							canvas.getTopRectangleHeight() + 
-							canvas.getSpacingBetweenRectangles());
-        		  canvas.setTopRectangleHeight(canvas.getTopRectangleHeight());
-        		  canvas.setBottomRectangleHeight(canvas.getBottomRectangleHeight());
-        		  tempWidth = (bottomSlider.getValue() / (double) MAX_SLIDER);
-        		  double ratioOfRectangles = canvas.getTopRectangleValue() / 
-   					   canvas.getBottomRectangleValue();
-        		  bottomTextField.setText(DECIMAL_FORMAT.format((tempWidth * MAX_SLIDER)));
-        		  topTextField.setText(DECIMAL_FORMAT.format((ratioOfRectangles * tempWidth * MAX_SLIDER)));
-        		  canvas.repaint();
-        		  //warn();
+        		  if (bottomRectangleMeasure.getText() != null & !bottomRectangleMeasure.getText().equals(" ")){
+	        		  bottomRectangleValue = Double.parseDouble(bottomRectangleMeasure.getText());
+	        		  canvas.setBottomRectangleValue(bottomRectangleValue);
+	        		  canvas.setTopRectangleValue(topRectangleValue);
+	        		  canvas.setSizeCanvas(canvas.getSize());
+	        		  canvas.setBottomRectangleYPosition(RectanglesCanvas.posYTopRectangle +
+								canvas.getTopRectangleHeight() + 
+								canvas.getSpacingBetweenRectangles());
+	        		  canvas.setTopRectangleHeight(canvas.getTopRectangleHeight());
+	        		  canvas.setBottomRectangleHeight(canvas.getBottomRectangleHeight());
+	        		  tempWidth = (bottomSlider.getValue() / (double) MAX_SLIDER);
+	        		  double ratioOfRectangles = canvas.getTopRectangleValue() / 
+	   					   canvas.getBottomRectangleValue();
+	        		  bottomTextField.setText(DECIMAL_FORMAT.format((tempWidth * MAX_SLIDER)));
+	        		  topTextField.setText(DECIMAL_FORMAT.format((ratioOfRectangles * tempWidth * MAX_SLIDER)));
+	        		  canvas.repaint();
+        		  }
         	  }
-        	  
-        	  public void warn() {
-        	   	  if (Integer.parseInt(bottomRectangleMeasure.getText()) <= 0){
-        	   		  JOptionPane.showMessageDialog(null,
-        	   				  "Error: Please enter number bigger than 0", "Error Massage",
-        	          JOptionPane.ERROR_MESSAGE);
-        	     }
-        	  }
-        	  
         	});
+        
+        bottomIterationMeasure.getDocument().addDocumentListener(new DocumentListener() {
+			public void changedUpdate(DocumentEvent arg0) {
+				if (bottomIterationMeasure.getText() != null & !bottomIterationMeasure.getText().equals(" ")){ 
+					topIterationValue = Double.parseDouble(bottomIterationMeasure.getText());
+					int width = (int) ((canvas.getWidthCanvas() - 
+							(2 * RectanglesCanvas.posXTopRectangle)) * topIterationValue);
+		    		canvas.setBottomRectangleWidth(width/MAX_SLIDER);
+		    		canvas.repaint();
+				}
+			}
+
+			public void insertUpdate(DocumentEvent arg0) {
+				if (bottomIterationMeasure.getText() != null & !bottomIterationMeasure.getText().equals(" ")){
+					topIterationValue = Double.parseDouble(bottomIterationMeasure.getText());
+					int width = (int) ((canvas.getWidthCanvas() - 
+							(2 * RectanglesCanvas.posXTopRectangle)) * topIterationValue);
+		    		canvas.setBottomRectangleWidth(width/MAX_SLIDER);
+		    		canvas.repaint();
+				}
+			}
+
+			public void removeUpdate(DocumentEvent arg0) throws NumberFormatException {
+				if (bottomIterationMeasure.getText() != null & bottomIterationMeasure.getText().equals(" ")){ 
+					topIterationValue = Double.parseDouble(bottomIterationMeasure.getText());
+					int width = (int) ((canvas.getWidthCanvas() - 
+							(2 * RectanglesCanvas.posXTopRectangle)) * topIterationValue);
+		    		canvas.setBottomRectangleWidth(width/MAX_SLIDER);
+		    		canvas.repaint();
+				}
+			}
+        	
+        });
         
         topRectangleMeasure.setPreferredSize(new Dimension(10, 50));
         bottomRectangleMeasure.setPreferredSize(new Dimension(10, 50));
@@ -378,10 +450,8 @@ public class MeasureRectangle extends JApplet {
         westPanel.setBorder(westBorder);
         westPanel.setLayout(new GridLayout(0, 1));
         westPanel.add(topRectangleMeasure);
-        westPanel.add(SEPARATOR);
-        westPanel.add(SEPARATOR);
-        westPanel.add(SEPARATOR);
-        westPanel.add(SEPARATOR);
+        westPanel.add(topIterationMeasure);
+        westPanel.add(bottomIterationMeasure);
         westPanel.add(bottomRectangleMeasure);
         
         // Elements of East Panel
@@ -427,6 +497,7 @@ public class MeasureRectangle extends JApplet {
     		JSlider tempSlider = (JSlider) e.getSource();
     		tempWidth = (tempSlider.getValue() / (double)MAX_SLIDER);
     		topSlider.setValue(tempSlider.getValue());
+    		System.out.println(topSlider.getValue());
     		int width = (int) ((canvas.getWidthCanvas() - 
 						(2 * RectanglesCanvas.posXTopRectangle)) * tempWidth);
     		canvas.setTopRectangleWidth(width);
