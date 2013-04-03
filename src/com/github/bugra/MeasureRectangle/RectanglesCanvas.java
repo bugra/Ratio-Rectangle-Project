@@ -35,21 +35,17 @@ class RectanglesCanvas extends Canvas {
         private double bottomRectangleValue = MeasureRectangle.INITIAL_TOP_RECTANGLE_VALUE;
         
         private final float RECTANGLE_THICKNESS = 1f; 
-        // Constructor
+        
+        
         RectanglesCanvas() {
-
-            // Create instances of 2D rectangles
-
             topRectangle = new Rectangle2D.Float(posXTopRectangle, posYTopRectangle,
             									widthTopRectangle, getTopRectangleHeight());
             bottomRectangle = new Rectangle2D.Float(posXBottomRectangle, getBottomRectangleYPosition(),
             										widthBottomRectangle, getBottomRectangleHeight());
-            
             setBackground(Color.white);
         }
 
         public void paint(Graphics g) {
-
             Graphics2D g2D = (Graphics2D) g;
             g2D.setStroke(new BasicStroke(RECTANGLE_THICKNESS));
 
@@ -101,7 +97,6 @@ class RectanglesCanvas extends Canvas {
         	this.setWidthCanvas(d.width);
         	// To prevent negative values
         	spacingBetweenRectangles = Math.abs((int) (d.height / precisionSpacingBetweenRectangles));        	
-        	//paint();
         }
         
         public void setWidthCanvas(int width){

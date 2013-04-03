@@ -75,8 +75,8 @@ public class MeasureRectangle extends JApplet {
     public static final double INITIAL_TOP_ITERATION_MEASURE = 1.0;
     public static final double INITIAL_BOTTOM_ITERATION_MEASURE = 1.0;
     
-    public static final int TOP_LABEL_MIN_VALUE = -370;
-    public static final int TOP_LABEL_MAX_VALUE = 380;
+    public static final int TOP_LABEL_MIN_VALUE = -375;
+    public static final int TOP_LABEL_MAX_VALUE = 385;
     public static final int TOP_LABEL_Y_POSITION = 55;
     		
     
@@ -521,6 +521,7 @@ public class MeasureRectangle extends JApplet {
     }
     
     class AsynchronousTopSliderListener implements ChangeListener{
+    	
     	public void stateChanged(ChangeEvent e){
     		canvas.setSizeCanvas(canvas.getSize());
     		JSlider tempSlider = (JSlider) e.getSource();
@@ -536,6 +537,7 @@ public class MeasureRectangle extends JApplet {
     		Point tempPoint = new Point(xPosition, TOP_LABEL_Y_POSITION);
     		topLabel.setLocation(tempPoint);
     		topLabel.setText(String.valueOf(((JSlider) e.getSource()).getValue()));
+    		topIterationMeasure.setText(String.valueOf(tempValue));
     		canvas.repaint();
     	}
     	
@@ -545,12 +547,14 @@ public class MeasureRectangle extends JApplet {
     	public void stateChanged(ChangeEvent e){
     		canvas.setSizeCanvas(canvas.getSize());
     		JSlider tempSlider = (JSlider) e.getSource();
-    		tempWidth = (tempSlider.getValue() / (double)MAX_SLIDER);
+    		int tempValue = tempSlider.getValue();
+    		tempWidth = (tempValue / (double)MAX_SLIDER);
     		bottomSlider.setValue(tempSlider.getValue());
     		int width = (int) ((canvas.getWidthCanvas() - 
 					(2 * RectanglesCanvas.posXTopRectangle)) * tempWidth);
     		canvas.setBottomRectangleWidth(width);
-    		bottomSlider.setToolTipText(String.valueOf(tempSlider.getValue()));
+    		bottomSlider.setToolTipText(String.valueOf(tempValue));
+    		bottomIterationMeasure.setText(String.valueOf(tempValue));
     		canvas.repaint();
     	}
     }
