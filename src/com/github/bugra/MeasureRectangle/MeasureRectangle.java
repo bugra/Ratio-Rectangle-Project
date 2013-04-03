@@ -1,7 +1,6 @@
 package com.github.bugra.MeasureRectangle;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -11,17 +10,12 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.text.DecimalFormat;
 
 import javax.swing.JApplet;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
@@ -42,13 +36,7 @@ public class MeasureRectangle extends JApplet {
 	RectanglesCanvas canvas;
     
     JTextField bottomTextField;
-    
-    JTextField bottomATextField;
-    JTextField bottomBTextField;
-    
     JTextField topTextField;
-    JTextField topATextField;
-    JTextField topBTextField;
     
     JTextField topRectangleMeasure;
     JTextField bottomRectangleMeasure;
@@ -87,7 +75,7 @@ public class MeasureRectangle extends JApplet {
     public static final double INITIAL_BOTTOM_ITERATION_MEASURE = 1.0;
     
     // Border Titles for East and West panel
-    public static final String westPanelTitle = "WEST PANEL";
+    public static final String westPanelTitle = "WEST";
     public static final String eastPanelTitle = "Red Sliders";
     
     // UNDO BUTTON INITIALIZATION
@@ -157,8 +145,6 @@ public class MeasureRectangle extends JApplet {
 						}
 					}
 				});
-        bottomATextField = new JTextField("aTextField");
-        bottomBTextField = new JTextField("bTextField");
 
         topPanel = new JPanel();
         TitledBorder topBorder = new TitledBorder("Change the ratio of above rectangle");
@@ -200,8 +186,6 @@ public class MeasureRectangle extends JApplet {
 					}
 				});
         
-        topATextField = new JTextField("aTextField");
-        topBTextField = new JTextField("bTextField");
 
         // INITIALIZATION of the components
         tempWidth = (int) (bottomSlider.getValue() / (double)MAX_SLIDER);
@@ -416,7 +400,6 @@ public class MeasureRectangle extends JApplet {
 		    		canvas.repaint();
 				}
 			}
-        	
         });
         
         topUndoButton = new JButton(TOP_UNDO_BUTTON_TEXT);
@@ -428,7 +411,7 @@ public class MeasureRectangle extends JApplet {
             }
         }); 
         
-        bottomUndoButton = new JButton();
+        bottomUndoButton = new JButton(BOTTOM_UNDO_BUTTON_TEXT);
         bottomUndoButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e)
             {
@@ -469,8 +452,6 @@ public class MeasureRectangle extends JApplet {
         bottomPanel.add(bottomSlider);
         //bottomPanel.add(bottomTextField);
         //bottomPanel.add(bottomCheckBox);
-        //bottomPanel.add(bottomATextField);
-        //bottomPanel.add(bottomBTextField);
         //bottomPanel.add(redBottomSlider);
         
         // Elements of Top Panel
@@ -480,8 +461,6 @@ public class MeasureRectangle extends JApplet {
         topPanel.add(pop);
         //topPanel.add(topTextField);
         //topPanel.add(topCheckBox);
-        //topPanel.add(topATextField);
-        //topPanel.add(topBTextField);
         //topPanel.add(redTopSlider);
         
         // Elements of West Panel
