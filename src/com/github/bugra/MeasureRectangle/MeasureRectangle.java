@@ -5,10 +5,13 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -30,6 +33,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.undo.UndoManager;
 
 
 @SuppressWarnings("serial")
@@ -87,8 +91,8 @@ public class MeasureRectangle extends JApplet {
     public static final String eastPanelTitle = "Red Sliders";
     
     // UNDO BUTTON INITIALIZATION
-    public static final String TOP_UNDO_BUTTON_TEXT = "Undo Top";
-    public static final String BOTTOM_UNDO_BUTTON_TEXT = "Undo Bottom";
+    public static final String TOP_UNDO_BUTTON_TEXT = "T";
+    public static final String BOTTOM_UNDO_BUTTON_TEXT = "B";
     
     // Length of text Fields
     public static final int LENGTH_OF_TEXT_FIELD = 3;
@@ -97,12 +101,16 @@ public class MeasureRectangle extends JApplet {
     public static final JSeparator SEPARATOR = new JSeparator(SwingConstants.VERTICAL);
     private double topRectangleValue = INITIAL_TOP_RECTANGLE_VALUE;
     private double bottomRectangleValue = INITIAL_BOTTOM_RECTANGLE_VALUE;
+    
     private double topIterationValue;
     private double bottomIterationValue;
-    private double previousTopIterationValue;
-    private double previousBottomIterationValue;
+    
+    private UndoManager topUndoManager;
+    private UndoManager bottomUndoManager;
     
     public static final String INITIAL_VALUE_LABEL = "1";
+    
+    public static final Dimension WEST_PANEL_SIZE = new Dimension(50, 50);
     
     private final int MIN_SLIDER = 0;
     private final int MAX_SLIDER = 100;
@@ -205,6 +213,8 @@ public class MeasureRectangle extends JApplet {
  		
         topRectangleMeasure = new JTextField();
         topIterationMeasure = new JTextField();
+        topUndoManager = new UndoManager();
+        topIterationMeasure.getDocument().addUndoableEditListener(topUndoManager);
         
         topRectangleMeasure.setText(INITIAL_VALUE_LABEL);
         topIterationMeasure.setText(String.valueOf(INITIAL_TOP_ITERATION_MEASURE));
@@ -308,6 +318,8 @@ public class MeasureRectangle extends JApplet {
         
         bottomRectangleMeasure = new JTextField();
         bottomIterationMeasure = new JTextField();
+        bottomUndoManager = new UndoManager();
+        bottomIterationMeasure.getDocument().addUndoableEditListener(bottomUndoManager);
         
         bottomRectangleMeasure.setText(INITIAL_VALUE_LABEL);
         bottomIterationMeasure.setText(String.valueOf(INITIAL_BOTTOM_ITERATION_MEASURE));
@@ -377,9 +389,9 @@ public class MeasureRectangle extends JApplet {
         bottomIterationMeasure.getDocument().addDocumentListener(new DocumentListener() {
 			public void changedUpdate(DocumentEvent arg0) {
 				if (bottomIterationMeasure.getText() != null & !bottomIterationMeasure.getText().equals(" ")){ 
-					topIterationValue = Double.parseDouble(bottomIterationMeasure.getText());
+					bottomIterationValue = Double.parseDouble(bottomIterationMeasure.getText());
 					int width = (int) ((canvas.getWidthCanvas() - 
-							(2 * RectanglesCanvas.posXTopRectangle)) * topIterationValue);
+							(2 * RectanglesCanvas.posXTopRectangle)) * bottomIterationValue);
 		    		canvas.setBottomRectangleWidth(width/MAX_SLIDER);
 		    		canvas.repaint();
 				}
@@ -387,9 +399,9 @@ public class MeasureRectangle extends JApplet {
 
 			public void insertUpdate(DocumentEvent arg0) {
 				if (bottomIterationMeasure.getText() != null & !bottomIterationMeasure.getText().equals(" ")){
-					topIterationValue = Double.parseDouble(bottomIterationMeasure.getText());
+					bottomIterationValue = Double.parseDouble(bottomIterationMeasure.getText());
 					int width = (int) ((canvas.getWidthCanvas() - 
-							(2 * RectanglesCanvas.posXTopRectangle)) * topIterationValue);
+							(2 * RectanglesCanvas.posXTopRectangle)) * bottomIterationValue);
 		    		canvas.setBottomRectangleWidth(width/MAX_SLIDER);
 		    		canvas.repaint();
 				}
@@ -397,9 +409,9 @@ public class MeasureRectangle extends JApplet {
 
 			public void removeUpdate(DocumentEvent arg0) throws NumberFormatException {
 				if (bottomIterationMeasure.getText() != null & bottomIterationMeasure.getText().equals(" ")){ 
-					topIterationValue = Double.parseDouble(bottomIterationMeasure.getText());
+					bottomIterationValue = Double.parseDouble(bottomIterationMeasure.getText());
 					int width = (int) ((canvas.getWidthCanvas() - 
-							(2 * RectanglesCanvas.posXTopRectangle)) * topIterationValue);
+							(2 * RectanglesCanvas.posXTopRectangle)) * bottomIterationValue);
 		    		canvas.setBottomRectangleWidth(width/MAX_SLIDER);
 		    		canvas.repaint();
 				}
@@ -408,7 +420,22 @@ public class MeasureRectangle extends JApplet {
         });
         
         topUndoButton = new JButton(TOP_UNDO_BUTTON_TEXT);
-        bottomUndoButton = new JButton(BOTTOM_UNDO_BUTTON_TEXT);
+        topUndoButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e)
+            {
+            	if(topUndoManager.canUndo())
+            		topUndoManager.undo();
+            }
+        }); 
+        
+        bottomUndoButton = new JButton();
+        bottomUndoButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e)
+            {
+            	if(topUndoManager.canUndo())
+            		bottomUndoManager.undo();
+            }
+        });
         
         topRectangleMeasure.setPreferredSize(new Dimension(10, 50));
         bottomRectangleMeasure.setPreferredSize(new Dimension(10, 50));
@@ -416,7 +443,7 @@ public class MeasureRectangle extends JApplet {
         westPanel = new JPanel();
         eastPanel = new JPanel();
         
-        westPanel.setPreferredSize(new Dimension(50, 50));
+        westPanel.setPreferredSize(WEST_PANEL_SIZE);
         //eastPanel.setPreferredSize(new Dimension(50, 50));
         
         TitledBorder westBorder = new TitledBorder(westPanelTitle);
@@ -460,9 +487,11 @@ public class MeasureRectangle extends JApplet {
         // Elements of West Panel
         westPanel.setBorder(westBorder);
         westPanel.setLayout(new GridLayout(0, 1));
+        
         westPanel.add(topRectangleMeasure);
         westPanel.add(topIterationMeasure);
         westPanel.add(topUndoButton);
+        
         westPanel.add(bottomUndoButton);
         westPanel.add(bottomIterationMeasure);
         westPanel.add(bottomRectangleMeasure);
