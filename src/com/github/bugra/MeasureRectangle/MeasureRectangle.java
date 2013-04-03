@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
@@ -74,6 +75,11 @@ public class MeasureRectangle extends JApplet {
     public static final double INITIAL_TOP_ITERATION_MEASURE = 1.0;
     public static final double INITIAL_BOTTOM_ITERATION_MEASURE = 1.0;
     
+    public static final int TOP_LABEL_MIN_VALUE = -370;
+    public static final int TOP_LABEL_MAX_VALUE = 380;
+    public static final int TOP_LABEL_Y_POSITION = 55;
+    		
+    
     // Border Titles for East and West panel
     public static final String westPanelTitle = "WEST";
     public static final String eastPanelTitle = "Red Sliders";
@@ -103,6 +109,9 @@ public class MeasureRectangle extends JApplet {
     private final int MIN_SLIDER = 0;
     private final int MAX_SLIDER = 100;
     private final int INITIAL_SLIDER = 1;
+    
+    private final int TOTAL_RANGE = TOP_LABEL_MAX_VALUE - TOP_LABEL_MIN_VALUE;
+	private final double LABEL_MOVEMENT_VALUE = TOTAL_RANGE / (double)MAX_SLIDER;
     
     private final int INITIAL_WIDTH = 800;
     private final int INITIAL_HEIGHT = 600;
@@ -151,7 +160,7 @@ public class MeasureRectangle extends JApplet {
         topPanel.setBorder(topBorder);
 
         topLabel = new JLabel("",SwingConstants.CENTER);
-
+        topLabel.setText("Label");
         topSlider = new JSlider(JSlider.HORIZONTAL, MIN_SLIDER, 
         								MAX_SLIDER, INITIAL_SLIDER);
         
@@ -226,7 +235,6 @@ public class MeasureRectangle extends JApplet {
         	  
         	  public void removeUpdate(DocumentEvent e) {
         		  if (topRectangleMeasure.getText() != null & topRectangleMeasure.getText().equals(" ")){
-        			  System.out.println(topRectangleMeasure.getText());
 	        		  topRectangleValue = Double.parseDouble(topRectangleMeasure.getText());  
 	        		  canvas.setTopRectangleValue(topRectangleValue);
 	        		  canvas.setBottomRectangleValue(bottomRectangleValue);
@@ -455,10 +463,10 @@ public class MeasureRectangle extends JApplet {
         //bottomPanel.add(redBottomSlider);
         
         // Elements of Top Panel
-        //topPanel.setLayout(new GridLayout(2, 3));
-        //topPanel.add(topLabel);
+        topPanel.setLayout(new GridLayout(0, 1));
+        topPanel.add(topLabel);
         topPanel.add(topSlider);
-        topPanel.add(pop);
+        //topPanel.add(pop);
         //topPanel.add(topTextField);
         //topPanel.add(topCheckBox);
         //topPanel.add(redTopSlider);
@@ -516,13 +524,18 @@ public class MeasureRectangle extends JApplet {
     	public void stateChanged(ChangeEvent e){
     		canvas.setSizeCanvas(canvas.getSize());
     		JSlider tempSlider = (JSlider) e.getSource();
-    		tempWidth = (tempSlider.getValue() / (double)MAX_SLIDER);
-    		topSlider.setValue(tempSlider.getValue());
-    		System.out.println(topSlider.getValue());
+    		int tempValue = tempSlider.getValue();
+    		tempWidth = (tempValue / (double)MAX_SLIDER);
+    		topSlider.setValue(tempValue);
     		int width = (int) ((canvas.getWidthCanvas() - 
 						(2 * RectanglesCanvas.posXTopRectangle)) * tempWidth);
     		canvas.setTopRectangleWidth(width);
-    		topSlider.setToolTipText(String.valueOf(tempSlider.getValue()));
+    		int xPosition = (int)(LABEL_MOVEMENT_VALUE * tempValue) + TOP_LABEL_MIN_VALUE;
+    		System.out.println(xPosition);
+    		topSlider.setToolTipText(String.valueOf(tempValue));
+    		Point tempPoint = new Point(xPosition, TOP_LABEL_Y_POSITION);
+    		topLabel.setLocation(tempPoint);
+    		topLabel.setText(String.valueOf(((JSlider) e.getSource()).getValue()));
     		canvas.repaint();
     	}
     	
@@ -572,12 +585,12 @@ public class MeasureRectangle extends JApplet {
         theApplet.start();  // starts the applet
 
         // Create a window (JFrame) and make applet the content pane.
-         javax.swing.JFrame window = new javax.swing.JFrame("Ratio App");
-         window.setContentPane(theApplet);
-         window.setPreferredSize(new Dimension(800,600));
-         window.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
-         window.pack();              // Arrange the components.
-         window.setVisible(true);    // Make the window visible.
+        javax.swing.JFrame window = new javax.swing.JFrame("Ratio App");
+        window.setContentPane(theApplet);
+        window.setPreferredSize(new Dimension(800,600));
+        window.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
+        window.pack();              // Arrange the components.
+        window.setVisible(true);    // Make the window visible.
     }
     
 }
