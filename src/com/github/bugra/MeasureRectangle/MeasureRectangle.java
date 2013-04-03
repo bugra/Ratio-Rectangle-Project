@@ -11,6 +11,8 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 import java.text.DecimalFormat;
 
 import javax.swing.JApplet;
@@ -307,7 +309,6 @@ public class MeasureRectangle extends JApplet {
         	
         });
         
-        
         bottomRectangleMeasure = new JTextField();
         bottomIterationMeasure = new JTextField();
         bottomUndoManager = new UndoManager();
@@ -521,7 +522,6 @@ public class MeasureRectangle extends JApplet {
     }
     
     class AsynchronousTopSliderListener implements ChangeListener{
-    	
     	public void stateChanged(ChangeEvent e){
     		canvas.setSizeCanvas(canvas.getSize());
     		JSlider tempSlider = (JSlider) e.getSource();
@@ -535,12 +535,25 @@ public class MeasureRectangle extends JApplet {
     		System.out.println(xPosition);
     		topSlider.setToolTipText(String.valueOf(tempValue));
     		Point tempPoint = new Point(xPosition, TOP_LABEL_Y_POSITION);
-    		topLabel.setLocation(tempPoint);
+    		System.out.println(!isValueAdjusting(e));
+    		if (isValueAdjusting(e)){
+    			//topLabel.setText(String.valueOf(((JSlider) e.getSource()).getValue()));
+    			topLabel.setText(" ");
+    		}
+    		else{
+    			topLabel.setText(String.valueOf(((JSlider) e.getSource()).getValue()));
+    			topLabel.setLocation(tempPoint);
+    		}
+    		//topLabel.setLocation(tempPoint);
     		topLabel.setText(String.valueOf(((JSlider) e.getSource()).getValue()));
+			topLabel.setLocation(tempPoint);
     		topIterationMeasure.setText(String.valueOf(tempValue));
     		canvas.repaint();
     	}
-    	
+    	public boolean isValueAdjusting(ChangeEvent e){
+    		JSlider tempSlider = (JSlider)e.getSource();
+    		return tempSlider.getValueIsAdjusting();
+    	}
     }
     
     class AsynchronousBottomSliderListener implements ChangeListener{
