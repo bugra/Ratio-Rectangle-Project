@@ -68,6 +68,12 @@ public class MeasureRectangle extends JApplet {
     JLabel topLabel;
     JLabel bottomLabel;
     
+    private int topLabelYposition = 0;
+    private int bottomLabelYPosition = 0;
+    
+    int xPosition;
+    
+    Point tempPoint;
     JPopupMenu pop;
     JLabel labelPop;
     
@@ -160,7 +166,6 @@ public class MeasureRectangle extends JApplet {
         topPanel = new JPanel();
         TitledBorder topBorder = new TitledBorder("Change the ratio of above rectangle");
         topPanel.setBorder(topBorder);
-
         topLabel = new JLabel("",SwingConstants.CENTER);
         topLabel.setText("Label");
         topSlider = new JSlider(JSlider.HORIZONTAL, MIN_SLIDER, 
@@ -170,8 +175,6 @@ public class MeasureRectangle extends JApplet {
         topSlider.addChangeListener(new AsynchronousTopSliderListener());
         topSlider.setPreferredSize(INITIAL_SLIDER_DIMENSION);
         topSlider.setToolTipText(Integer.toString(topSlider.getValue()));
-        
-        
         
         //topSlider.setMajorTickSpacing(MAJOR_TICK_SPACING);
         //topSlider.setMinorTickSpacing(MINOR_TICK_SPACING);
@@ -424,7 +427,7 @@ public class MeasureRectangle extends JApplet {
         bottomUndoButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e)
             {
-            	if(topUndoManager.canUndo())
+            	if(bottomUndoManager.canUndo())
             		bottomUndoManager.undo();
             }
         });
@@ -531,22 +534,12 @@ public class MeasureRectangle extends JApplet {
     		int width = (int) ((canvas.getWidthCanvas() - 
 						(2 * RectanglesCanvas.posXTopRectangle)) * tempWidth);
     		canvas.setTopRectangleWidth(width);
-    		int xPosition = (int)(LABEL_MOVEMENT_VALUE * tempValue) + TOP_LABEL_MIN_VALUE;
-    		System.out.println(xPosition);
+    		xPosition = (int)(LABEL_MOVEMENT_VALUE * tempValue) + TOP_LABEL_MIN_VALUE;
     		topSlider.setToolTipText(String.valueOf(tempValue));
-    		Point tempPoint = new Point(xPosition, TOP_LABEL_Y_POSITION);
-    		System.out.println(!isValueAdjusting(e));
-    		if (isValueAdjusting(e)){
-    			//topLabel.setText(String.valueOf(((JSlider) e.getSource()).getValue()));
-    			topLabel.setText(" ");
-    		}
-    		else{
-    			topLabel.setText(String.valueOf(((JSlider) e.getSource()).getValue()));
-    			topLabel.setLocation(tempPoint);
-    		}
-    		//topLabel.setLocation(tempPoint);
+    		tempPoint = new Point(xPosition, TOP_LABEL_Y_POSITION);
     		topLabel.setText(String.valueOf(((JSlider) e.getSource()).getValue()));
-			topLabel.setLocation(tempPoint);
+    		topLabel.setLocation(tempPoint);
+    		
     		topIterationMeasure.setText(String.valueOf(tempValue));
     		canvas.repaint();
     	}
