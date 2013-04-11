@@ -139,7 +139,7 @@ public class MeasureRectangle extends JApplet {
         canvas = new RectanglesCanvas();
         
         bottomPanel = new JPanel();
-        TitledBorder southBorder = new TitledBorder("Change the ratio of below rectangle");
+        TitledBorder southBorder = new TitledBorder("Quantity B");
         bottomPanel.setBorder(southBorder);
         bottomLabel = new JLabel("Below Rectangle: ", JLabel.RIGHT);
         bottomSlider = new JSlider(JSlider.HORIZONTAL, MIN_SLIDER, 
@@ -164,7 +164,7 @@ public class MeasureRectangle extends JApplet {
 				});
 
         topPanel = new JPanel();
-        TitledBorder topBorder = new TitledBorder("Change the ratio of above rectangle");
+        TitledBorder topBorder = new TitledBorder("Quantity A");
         topPanel.setBorder(topBorder);
         topLabel = new JLabel("",SwingConstants.CENTER);
         topLabel.setText("Label");
@@ -595,7 +595,7 @@ public class MeasureRectangle extends JApplet {
         theApplet.start();  // starts the applet
 
         // Create a window (JFrame) and make applet the content pane.
-        javax.swing.JFrame window = new javax.swing.JFrame("Ratio App");
+        javax.swing.JFrame window = new javax.swing.JFrame("Version 0.01");
         window.setContentPane(theApplet);
         window.setPreferredSize(new Dimension(800,600));
         window.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
