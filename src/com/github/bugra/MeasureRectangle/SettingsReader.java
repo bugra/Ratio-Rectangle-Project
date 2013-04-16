@@ -7,12 +7,11 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Map;
 
 public class SettingsReader {
 	private static volatile SettingsReader	instance = null;
 	private static final String FILE_NAME = "settings.txt"; 
-	private static final String SETTINGS = "Asynchronous: 1\nGrid: 1";
+	private static final String SETTINGS = "Asynchronous: 1\nGrid: 1\nStudent: 1";
 	private static final String DELIMETER = ":";
 	private static HashMap<String, Integer> settings;
 	

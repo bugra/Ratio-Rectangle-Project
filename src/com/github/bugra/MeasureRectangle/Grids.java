@@ -4,6 +4,7 @@ import java.awt.Canvas;
 import java.awt.Frame;
 import java.awt.Graphics;
 
+@SuppressWarnings("serial")
 class Grids extends Canvas {
 	  int width, height, rows, columns;
 
@@ -27,6 +28,7 @@ class Grids extends Canvas {
 	  }
 	}
 	
+	@SuppressWarnings("serial")
 	class DrawGrids extends Frame {
 	  DrawGrids(String title, int w, int h, int rows, int columns) {
 	    setTitle(title);

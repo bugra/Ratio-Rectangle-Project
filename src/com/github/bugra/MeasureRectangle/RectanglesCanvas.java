@@ -6,10 +6,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
-
-import javax.swing.JComponent;
 
 @SuppressWarnings("serial")
 class RectanglesCanvas extends Canvas {
@@ -18,12 +15,12 @@ class RectanglesCanvas extends Canvas {
         public static final int posXTopRectangle = 10;
         public static final int posYTopRectangle = 10;
         private int widthTopRectangle = 50;
-        private int heightTopRectangle = 50;
+//        private int heightTopRectangle = 50;
         
         public static final int posXBottomRectangle = 10;
         public static final int spacingBetweenBottomToRectangle = 10;
         private int widthBottomRectangle = 50;
-        private int heightBottomRectangle = 50;
+//        private int heightBottomRectangle = 50;
         
         private final int precisionSpacingBetweenRectangles = 30;
         private int spacingBetweenRectangles = 10;

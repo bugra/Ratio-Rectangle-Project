@@ -5,7 +5,6 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,8 +12,6 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
 import java.text.DecimalFormat;
 
 import javax.swing.JApplet;
@@ -53,8 +50,6 @@ public class MeasureRectangle extends JApplet {
     
     JPanel topPanel;
     JPanel bottomPanel;
-    JPanel westPanel;
-    JPanel eastPanel;
     
     // Functional slider for rectangle resizing
     JSlider topSlider;
@@ -69,9 +64,6 @@ public class MeasureRectangle extends JApplet {
     
     JLabel topLabel;
     JLabel bottomLabel;
-    
-    private int topLabelYposition = 0;
-    private int bottomLabelYPosition = 0;
     
     int xPosition;
     
@@ -89,13 +81,9 @@ public class MeasureRectangle extends JApplet {
     public static final int TOP_LABEL_MAX_VALUE = 385;
     public static final int TOP_LABEL_Y_POSITION = 55;
     
-    // Border Titles for East and West panel
-    public static final String westPanelTitle = "WEST";
-    public static final String eastPanelTitle = "Red Sliders";
-    
     // UNDO BUTTON INITIALIZATION
-    public static final String TOP_UNDO_BUTTON_TEXT = "T";
-    public static final String BOTTOM_UNDO_BUTTON_TEXT = "B";
+    public static final String TOP_UNDO_BUTTON_TEXT = "UNDO";
+    public static final String BOTTOM_UNDO_BUTTON_TEXT = "UNDO";
     
     // Length of text Fields
     public static final int LENGTH_OF_TEXT_FIELD = 3;
@@ -284,6 +272,7 @@ public class MeasureRectangle extends JApplet {
 					int width = (int) ((canvas.getWidthCanvas() - 
 							(2 * RectanglesCanvas.posXTopRectangle)) * topIterationValue);
 		    		canvas.setTopRectangleWidth(width/MAX_SLIDER);
+		    		canvas.setBottomRectangleWidth(width/MAX_SLIDER);
 		    		canvas.repaint();
 				}
 			}
@@ -294,6 +283,7 @@ public class MeasureRectangle extends JApplet {
 					int width = (int) ((canvas.getWidthCanvas() - 
 							(2 * RectanglesCanvas.posXTopRectangle)) * topIterationValue);
 		    		canvas.setTopRectangleWidth(width/MAX_SLIDER);
+		    		canvas.setBottomRectangleWidth(width/MAX_SLIDER);
 		    		canvas.repaint();
 				}
 			}
@@ -304,6 +294,7 @@ public class MeasureRectangle extends JApplet {
 					int width = (int) ((canvas.getWidthCanvas() - 
 							(2 * RectanglesCanvas.posXTopRectangle)) * topIterationValue);
 		    		canvas.setTopRectangleWidth(width/MAX_SLIDER);
+		    		canvas.setBottomRectangleWidth(width/MAX_SLIDER);
 		    		canvas.repaint();
 				}
 			}
@@ -387,6 +378,7 @@ public class MeasureRectangle extends JApplet {
 					int width = (int) ((canvas.getWidthCanvas() - 
 							(2 * RectanglesCanvas.posXTopRectangle)) * bottomIterationValue);
 		    		canvas.setBottomRectangleWidth(width/MAX_SLIDER);
+		    		canvas.setTopRectangleWidth(width/MAX_SLIDER);
 		    		canvas.repaint();
 				}
 			}
@@ -397,6 +389,7 @@ public class MeasureRectangle extends JApplet {
 					int width = (int) ((canvas.getWidthCanvas() - 
 							(2 * RectanglesCanvas.posXTopRectangle)) * bottomIterationValue);
 		    		canvas.setBottomRectangleWidth(width/MAX_SLIDER);
+		    		canvas.setTopRectangleWidth(width/MAX_SLIDER);
 		    		canvas.repaint();
 				}
 			}
@@ -407,6 +400,7 @@ public class MeasureRectangle extends JApplet {
 					int width = (int) ((canvas.getWidthCanvas() - 
 							(2 * RectanglesCanvas.posXTopRectangle)) * bottomIterationValue);
 		    		canvas.setBottomRectangleWidth(width/MAX_SLIDER);
+		    		canvas.setTopRectangleWidth(width/MAX_SLIDER);
 		    		canvas.repaint();
 				}
 			}
