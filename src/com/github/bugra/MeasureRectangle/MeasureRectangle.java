@@ -86,7 +86,6 @@ public class MeasureRectangle extends JApplet {
     public static final int TOP_LABEL_MIN_VALUE = -375;
     public static final int TOP_LABEL_MAX_VALUE = 385;
     public static final int TOP_LABEL_Y_POSITION = 55;
-    		
     
     // Border Titles for East and West panel
     public static final String westPanelTitle = "WEST";
@@ -132,9 +131,6 @@ public class MeasureRectangle extends JApplet {
     double tempWidth = 0.5;
 
     public void init() {
-    	
-    	
-    	
     	container = getContentPane();
         canvas = new RectanglesCanvas();
         
