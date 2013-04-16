@@ -63,7 +63,7 @@ public class SettingsReader {
 		}
 		if(settings.containsKey("Grid") & settings.containsKey("Asynchronous")){
 			if((settings.get("Grid") == 0 | settings.get("Grid") == 1 ) & 
-			   (settings.get("Asynchronous") == 1 | settings.get("Asynchronous") == 1)){
+			   (settings.get("Asynchronous") == 1 | settings.get("Asynchronous") == 0)){
 				validate = true;
 			}else{
 				createFile();

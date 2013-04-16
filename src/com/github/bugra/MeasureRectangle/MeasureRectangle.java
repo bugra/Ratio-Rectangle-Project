@@ -12,7 +12,9 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.IOException;
 import java.text.DecimalFormat;
+import java.util.HashMap;
 
 import javax.swing.JApplet;
 import javax.swing.JButton;
@@ -51,10 +53,10 @@ public class MeasureRectangle extends JApplet {
     JTextField bottomNumeratorField;
     JTextField bottomDenominatorField;
     
-    private int topNumerator;
-    private int topDenominator;
-    private int bottomNumberator;
-    private int bottomDenominator;
+    private int topNumerator = 0;
+    private int topDenominator = 0;
+    private int bottomNumerator = 0;
+    private int bottomDenominator = 0;
     
     JButton topUndoButton;
     JButton bottomUndoButton;
@@ -62,7 +64,6 @@ public class MeasureRectangle extends JApplet {
     JPanel topPanel;
     JPanel bottomPanel;
     
-    // Functional slider for rectangle resizing
     JSlider topSlider;
     JSlider bottomSlider;
     
@@ -70,7 +71,6 @@ public class MeasureRectangle extends JApplet {
     JCheckBox bottomCheckBox;
     
     JLabel topLabel;
-    JLabel bottomLabel;
     
     int xPosition;
     
@@ -81,8 +81,8 @@ public class MeasureRectangle extends JApplet {
     public static final double INITIAL_TOP_RECTANGLE_VALUE = 1.0;
     public static final double INITIAL_BOTTOM_RECTANGLE_VALUE = 1.0;
     
-    public static final double INITIAL_TOP_ITERATION_MEASURE = 1.0;
-    public static final double INITIAL_BOTTOM_ITERATION_MEASURE = 1.0;
+    public static final double INITIAL_TOP_ITERATION_MEASURE = 0;
+    public static final double INITIAL_BOTTOM_ITERATION_MEASURE = 0;
     
     public static final int TOP_LABEL_MIN_VALUE = -375;
     public static final int TOP_LABEL_MAX_VALUE = 385;
@@ -97,6 +97,7 @@ public class MeasureRectangle extends JApplet {
     
     public static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#.##");
     public static final JSeparator SEPARATOR = new JSeparator(SwingConstants.VERTICAL);
+    
     private double topRectangleValue = INITIAL_TOP_RECTANGLE_VALUE;
     private double bottomRectangleValue = INITIAL_BOTTOM_RECTANGLE_VALUE;
     
@@ -126,19 +127,32 @@ public class MeasureRectangle extends JApplet {
     private final Dimension INITIAL_SLIDER_DIMENSION = new Dimension(710, 50);
     // Initial value of sliders
     double tempWidth = 0.5;
+    
+    // OPTIONS READ FROM SETTINGS FILE
+    private boolean asynchronous; 
 
     public void init() {
+    	// Initialization for Options
+    	SettingsReader sr = SettingsReader.getInstance();
+		HashMap<String, Integer> settings = new HashMap<String, Integer>();
+		try {
+			settings = sr.readFile();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		// Asynchronous or Synchronous Slider
+    	asynchronous = settings.get("Asynchronous") == 1 ? true:false;
+    	System.out.println(asynchronous);
+    	
     	container = getContentPane();
         canvas = new RectanglesCanvas();
         
         bottomPanel = new JPanel();
         TitledBorder southBorder = new TitledBorder("Quantity B");
         bottomPanel.setBorder(southBorder);
-        bottomLabel = new JLabel("Below Rectangle: ", JLabel.RIGHT);
         bottomSlider = new JSlider(JSlider.HORIZONTAL, MIN_SLIDER, 
         									MAX_SLIDER, INITIAL_SLIDER);
-        //bottomSlider.addChangeListener(new SynchronousSliderListener());
-        bottomSlider.addChangeListener(new AsynchronousBottomSliderListener());
+        
         
         bottomSlider.setPreferredSize( INITIAL_SLIDER_DIMENSION );
         bottomTextField = new JTextField(Double.toString((double) INITIAL_SLIDER / MAX_SLIDER), 
@@ -164,8 +178,13 @@ public class MeasureRectangle extends JApplet {
         topSlider = new JSlider(JSlider.HORIZONTAL, MIN_SLIDER, 
         								MAX_SLIDER, INITIAL_SLIDER);
         
-        //topSlider.addChangeListener(new SynchronousSliderListener());
-        topSlider.addChangeListener(new AsynchronousTopSliderListener());
+        if(asynchronous){
+        	topSlider.addChangeListener(new AsynchronousTopSliderListener());
+            bottomSlider.addChangeListener(new AsynchronousBottomSliderListener());
+        }else{
+        	topSlider.addChangeListener(new SynchronousSliderListener());
+        	bottomSlider.addChangeListener(new SynchronousSliderListener());
+        }
         topSlider.setPreferredSize(INITIAL_SLIDER_DIMENSION);
         topSlider.setToolTipText(Integer.toString(topSlider.getValue()));
         
@@ -186,21 +205,18 @@ public class MeasureRectangle extends JApplet {
 					public void itemStateChanged(ItemEvent e) {
 						if (e.getStateChange() == ItemEvent.SELECTED){
 							topTextField.setVisible(false);
-						}
-						else{
+						}else{
 							topTextField.setVisible(true);
 						}
 					}
 				});
         
-
         // INITIALIZATION of the components
         tempWidth = (int) (bottomSlider.getValue() / (double)MAX_SLIDER);
         canvas.setTopRectangleWidth((int) ((canvas.getWidthCanvas() - 
 					(2 * RectanglesCanvas.posXTopRectangle)) * tempWidth));
  		canvas.setBottomRectangleWidth((int) ((canvas.getWidthCanvas() - 
 					(2 * RectanglesCanvas.posXTopRectangle)) * tempWidth));
- 		
  		
         topRectangleMeasure = new JTextField();
         topIterationMeasure = new JTextField();
@@ -212,7 +228,9 @@ public class MeasureRectangle extends JApplet {
         
         topRectangleMeasure.getDocument().addDocumentListener(new DocumentListener() {
         	  public void changedUpdate(DocumentEvent e) {
-        		  if (topRectangleMeasure.getText() != null & !topRectangleMeasure.getText().equals(" ")){
+        		  if (topRectangleMeasure.getText() == null | topRectangleMeasure.getText().equals(" ")){
+        			  //topRectangleMeasure.setText("0");
+        		  }else{
 	        		  topRectangleValue = Double.parseDouble(topRectangleMeasure.getText());
 	        		  canvas.setTopRectangleValue(topRectangleValue);
 	        		  canvas.setBottomRectangleValue(bottomRectangleValue);
@@ -232,7 +250,9 @@ public class MeasureRectangle extends JApplet {
         	  }
         	  
         	  public void removeUpdate(DocumentEvent e) {
-        		  if (topRectangleMeasure.getText() != null & topRectangleMeasure.getText().equals(" ")){
+        		  if (topRectangleMeasure.getText() == null | topRectangleMeasure.getText().equals(" ")){
+        			  //topRectangleMeasure.setText("0");
+        		  }else{
 	        		  topRectangleValue = Double.parseDouble(topRectangleMeasure.getText());  
 	        		  canvas.setTopRectangleValue(topRectangleValue);
 	        		  canvas.setBottomRectangleValue(bottomRectangleValue);
@@ -252,7 +272,9 @@ public class MeasureRectangle extends JApplet {
         	  }
         	  
         	  public void insertUpdate(DocumentEvent e) {
-        		  if (topRectangleMeasure.getText() != null & !topRectangleMeasure.getText().equals(" ")){
+        		  if (topRectangleMeasure.getText() == null | topRectangleMeasure.getText().equals(" ")){
+        			  //topRectangleMeasure.setText("0");
+        		  }else{
 	        		  topRectangleValue = Double.parseDouble(topRectangleMeasure.getText());  
 	        		  canvas.setTopRectangleValue(topRectangleValue);
 	        		  canvas.setBottomRectangleValue(bottomRectangleValue);
@@ -274,7 +296,9 @@ public class MeasureRectangle extends JApplet {
         
         topIterationMeasure.getDocument().addDocumentListener(new DocumentListener() {
 			public void changedUpdate(DocumentEvent arg0) {
-				if (topIterationMeasure.getText() != null & !topIterationMeasure.getText().equals(" ")){ 
+				if (topIterationMeasure.getText() == null | topIterationMeasure.getText().equals(" ")){
+					//topIterationMeasure.setText("0");
+				}else{ 
 					topIterationValue = Double.parseDouble(topIterationMeasure.getText());
 					int width = (int) ((canvas.getWidthCanvas() - 
 							(2 * RectanglesCanvas.posXTopRectangle)) * topIterationValue);
@@ -285,7 +309,9 @@ public class MeasureRectangle extends JApplet {
 			}
 
 			public void insertUpdate(DocumentEvent arg0) {
-				if (topIterationMeasure.getText() != null & !topIterationMeasure.getText().equals(" ")){
+				if (topIterationMeasure.getText() == null | topIterationMeasure.getText().equals(" ")){
+					//topIterationMeasure.setText("0");
+				}else{
 					topIterationValue = Double.parseDouble(topIterationMeasure.getText());
 					int width = (int) ((canvas.getWidthCanvas() - 
 							(2 * RectanglesCanvas.posXTopRectangle)) * topIterationValue);
@@ -296,7 +322,9 @@ public class MeasureRectangle extends JApplet {
 			}
 
 			public void removeUpdate(DocumentEvent arg0) throws NumberFormatException {
-				if (topIterationMeasure.getText() != null & topIterationMeasure.getText().equals(" ")){ 
+				if (topIterationMeasure.getText() == null | topIterationMeasure.getText().equals(" ")){
+					//topIterationMeasure.setText("0");
+				}else{
 					topIterationValue = Double.parseDouble(topIterationMeasure.getText());
 					int width = (int) ((canvas.getWidthCanvas() - 
 							(2 * RectanglesCanvas.posXTopRectangle)) * topIterationValue);
@@ -309,6 +337,9 @@ public class MeasureRectangle extends JApplet {
         });
         
         bottomRectangleMeasure = new JTextField();
+        bottomNumeratorField = new JTextField();
+        bottomDenominatorField = new JTextField();
+        
         bottomIterationMeasure = new JTextField();
         bottomUndoManager = new UndoManager();
         bottomIterationMeasure.getDocument().addUndoableEditListener(bottomUndoManager);
@@ -318,7 +349,9 @@ public class MeasureRectangle extends JApplet {
         
         bottomRectangleMeasure.getDocument().addDocumentListener(new DocumentListener() {
         	  public void changedUpdate(DocumentEvent e) {
-        		  if (bottomRectangleMeasure.getText() != null & !bottomRectangleMeasure.getText().equals(" ")){ 
+        		  if (bottomRectangleMeasure.getText() == null | bottomRectangleMeasure.getText().equals(" ")){
+        			  //bottomRectangleMeasure.setText("0");
+        		  }else{
 	        		  bottomRectangleValue = Double.parseDouble(bottomRectangleMeasure.getText());
 	        		  canvas.setBottomRectangleValue(bottomRectangleValue);
 	        		  canvas.setTopRectangleValue(topRectangleValue);
@@ -338,7 +371,9 @@ public class MeasureRectangle extends JApplet {
         	  }
         	  
         	  public void removeUpdate(DocumentEvent e) {
-        		  if (bottomRectangleMeasure.getText() != null & bottomRectangleMeasure.getText().equals(" ")){
+        		  if (bottomRectangleMeasure.getText() == null | bottomRectangleMeasure.getText().equals(" ")){
+        			  //bottomRectangleMeasure.setText("0");
+        		  }else{
 	        		  bottomRectangleValue = Double.parseDouble(bottomRectangleMeasure.getText());  
 	        		  canvas.setBottomRectangleValue(bottomRectangleValue);
 	        		  canvas.setTopRectangleValue(topRectangleValue);
@@ -358,7 +393,9 @@ public class MeasureRectangle extends JApplet {
         	  }
         	  
         	  public void insertUpdate(DocumentEvent e) {
-        		  if (bottomRectangleMeasure.getText() != null & !bottomRectangleMeasure.getText().equals(" ")){
+        		  if (bottomRectangleMeasure.getText() == null | bottomRectangleMeasure.getText().equals(" ")){
+        			  //bottomRectangleMeasure.setText("0");
+        		  }else{
 	        		  bottomRectangleValue = Double.parseDouble(bottomRectangleMeasure.getText());
 	        		  canvas.setBottomRectangleValue(bottomRectangleValue);
 	        		  canvas.setTopRectangleValue(topRectangleValue);
@@ -380,7 +417,9 @@ public class MeasureRectangle extends JApplet {
         
         bottomIterationMeasure.getDocument().addDocumentListener(new DocumentListener() {
 			public void changedUpdate(DocumentEvent arg0) {
-				if (bottomIterationMeasure.getText() != null & !bottomIterationMeasure.getText().equals(" ")){ 
+				if (bottomIterationMeasure.getText() == null | bottomIterationMeasure.getText().equals(" ")){
+					//bottomIterationMeasure.setText("0");
+				}else{
 					bottomIterationValue = Double.parseDouble(bottomIterationMeasure.getText());
 					int width = (int) ((canvas.getWidthCanvas() - 
 							(2 * RectanglesCanvas.posXTopRectangle)) * bottomIterationValue);
@@ -391,7 +430,9 @@ public class MeasureRectangle extends JApplet {
 			}
 
 			public void insertUpdate(DocumentEvent arg0) {
-				if (bottomIterationMeasure.getText() != null & !bottomIterationMeasure.getText().equals(" ")){
+				if (bottomIterationMeasure.getText() == null | bottomIterationMeasure.getText().equals(" ")){
+					//bottomIterationMeasure.setText("0");
+				}else{
 					bottomIterationValue = Double.parseDouble(bottomIterationMeasure.getText());
 					int width = (int) ((canvas.getWidthCanvas() - 
 							(2 * RectanglesCanvas.posXTopRectangle)) * bottomIterationValue);
@@ -402,7 +443,9 @@ public class MeasureRectangle extends JApplet {
 			}
 
 			public void removeUpdate(DocumentEvent arg0) throws NumberFormatException {
-				if (bottomIterationMeasure.getText() != null & bottomIterationMeasure.getText().equals(" ")){ 
+				if (bottomIterationMeasure.getText() == null | bottomIterationMeasure.getText().equals(" ")){
+					//bottomIterationMeasure.setText("0");
+				}else{ 
 					bottomIterationValue = Double.parseDouble(bottomIterationMeasure.getText());
 					int width = (int) ((canvas.getWidthCanvas() - 
 							(2 * RectanglesCanvas.posXTopRectangle)) * bottomIterationValue);
@@ -439,17 +482,18 @@ public class MeasureRectangle extends JApplet {
         
         topPanel.setLayout(new GridBagLayout());
         c.fill = GridBagConstraints.HORIZONTAL;
+        c.ipady = 20;
         c.weightx = 0.5;
         c.gridx = 0;
         c.gridy = 0;
         topPanel.add(topRectangleMeasure, c);
         c.fill = GridBagConstraints.HORIZONTAL;
-        c.weightx = 0.0;
+        c.weightx = 0.5;
         c.gridx = 1;
         c.gridy = 0;
         topPanel.add(topIterationMeasure, c);
         c.fill = GridBagConstraints.HORIZONTAL;
-        c.weightx = 0.5;
+        c.weightx = 0.2;
         c.gridx = 2;
         c.gridy = 0;
         topPanel.add(topUndoButton, c);
@@ -482,11 +526,10 @@ public class MeasureRectangle extends JApplet {
         c.gridy = 1;
         bottomPanel.add(bottomIterationMeasure, c);
         c.fill = GridBagConstraints.HORIZONTAL;
-        c.weightx = 0.5;
+        c.weightx = 0.2;
         c.gridx = 2;
         c.gridy = 1;
         bottomPanel.add(bottomUndoButton, c);
-        
         
         // Add the canvas into the container
         container.add(canvas);
@@ -529,10 +572,10 @@ public class MeasureRectangle extends JApplet {
     		tempPoint = new Point(xPosition, TOP_LABEL_Y_POSITION);
     		topLabel.setText(String.valueOf(((JSlider) e.getSource()).getValue()));
     		topLabel.setLocation(tempPoint);
-    		
     		topIterationMeasure.setText(String.valueOf(tempValue));
     		canvas.repaint();
     	}
+    	
     	public boolean isValueAdjusting(ChangeEvent e){
     		JSlider tempSlider = (JSlider)e.getSource();
     		return tempSlider.getValueIsAdjusting();

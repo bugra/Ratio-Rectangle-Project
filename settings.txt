@@ -1,2 +1,3 @@
-Asynchronous: 1
+Asynchronous: 0
 Grid: 1
+Student: 1
