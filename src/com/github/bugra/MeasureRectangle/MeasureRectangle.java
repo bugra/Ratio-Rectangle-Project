@@ -45,6 +45,17 @@ public class MeasureRectangle extends JApplet {
     JTextField topIterationMeasure;
     JTextField bottomIterationMeasure;
     
+    
+    JTextField topNumeratorField;
+    JTextField topDenominatorField;
+    JTextField bottomNumeratorField;
+    JTextField bottomDenominatorField;
+    
+    private int topNumerator;
+    private int topDenominator;
+    private int bottomNumberator;
+    private int bottomDenominator;
+    
     JButton topUndoButton;
     JButton bottomUndoButton;
     
@@ -54,10 +65,6 @@ public class MeasureRectangle extends JApplet {
     // Functional slider for rectangle resizing
     JSlider topSlider;
     JSlider bottomSlider;
-    
-    // Non-functional sliders which will reside in the east panel?
-    JSlider redTopSlider;
-    JSlider redBottomSlider;
     
     JCheckBox topCheckBox;
     JCheckBox bottomCheckBox;
