@@ -3,6 +3,8 @@ package com.github.bugra.MeasureRectangle;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -431,75 +433,66 @@ public class MeasureRectangle extends JApplet {
         topRectangleMeasure.setPreferredSize(new Dimension(10, 50));
         bottomRectangleMeasure.setPreferredSize(new Dimension(10, 50));
         
-        westPanel = new JPanel();
-        eastPanel = new JPanel();
-        
-        westPanel.setPreferredSize(WEST_PANEL_SIZE);
-        //eastPanel.setPreferredSize(new Dimension(50, 50));
-        
-        TitledBorder westBorder = new TitledBorder(westPanelTitle);
-        TitledBorder eastBorder = new TitledBorder(eastPanelTitle);
-        
-        // Initialize the non-functional sliders in the east panel
-        redTopSlider = new JSlider(JSlider.HORIZONTAL, MIN_SLIDER, 
-				MAX_SLIDER, INITIAL_SLIDER);
-        redTopSlider.addChangeListener(new SynchronousSliderListener());
-        
-        redBottomSlider = new JSlider(JSlider.HORIZONTAL, MIN_SLIDER, 
-				MAX_SLIDER, INITIAL_SLIDER);
-        redBottomSlider.addChangeListener(new SynchronousSliderListener());
-        
-        pop = new JPopupMenu();
-    	labelPop = new JLabel("", SwingConstants.CENTER);
-    	labelPop.setPreferredSize(new Dimension(30,12));
-    	pop.add(labelPop);
-        
-        
-        // Elements of Bottom Panel
-        //bottomPanel.add(bottomLabel);
-        bottomPanel.add(bottomSlider);
-        //bottomPanel.add(bottomTextField);
-        //bottomPanel.add(bottomCheckBox);
-        //bottomPanel.add(redBottomSlider);
-        
+        GridBagConstraints c = new GridBagConstraints();
         // Elements of Top Panel
-        topPanel.setLayout(new GridLayout(0, 1));
-        topPanel.add(topLabel);
-        topPanel.add(topSlider);
-        //topPanel.add(pop);
-        //topPanel.add(topTextField);
-        //topPanel.add(topCheckBox);
-        //topPanel.add(redTopSlider);
         
-        // Elements of West Panel
-        westPanel.setBorder(westBorder);
-        westPanel.setLayout(new GridLayout(0, 1));
+        topPanel.setLayout(new GridBagLayout());
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx = 0.5;
+        c.gridx = 0;
+        c.gridy = 0;
+        topPanel.add(topRectangleMeasure, c);
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx = 0.0;
+        c.gridx = 1;
+        c.gridy = 0;
+        topPanel.add(topIterationMeasure, c);
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx = 0.5;
+        c.gridx = 2;
+        c.gridy = 0;
+        topPanel.add(topUndoButton, c);
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.ipady = 40;      //make this component tall
+        c.weightx = 0.0;
+        c.gridwidth = 3;
+        c.gridx = 0;
+        c.gridy = 1;
+        topPanel.add(topSlider, c);
         
-        westPanel.add(topRectangleMeasure);
-        westPanel.add(topIterationMeasure);
-        westPanel.add(topUndoButton);
+        bottomPanel.setLayout(new GridBagLayout());
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.ipady = 40;      //make this component tall
+        c.weightx = 0.0;
+        c.gridwidth = 3;
+        c.gridx = 0;
+        c.gridy = 0;
+        bottomPanel.add(bottomSlider, c);
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.ipady = 20;
+        c.gridwidth = 1;
+        c.weightx = 0.5;
+        c.gridx = 0;
+        c.gridy = 1;
+        bottomPanel.add(bottomRectangleMeasure, c);
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx = 0.5;
+        c.gridx = 1;
+        c.gridy = 1;
+        bottomPanel.add(bottomIterationMeasure, c);
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx = 0.5;
+        c.gridx = 2;
+        c.gridy = 1;
+        bottomPanel.add(bottomUndoButton, c);
         
-        westPanel.add(bottomUndoButton);
-        westPanel.add(bottomIterationMeasure);
-        westPanel.add(bottomRectangleMeasure);
         
-        // Elements of East Panel
-        eastPanel.setBorder(eastBorder);
-        eastPanel.setLayout(new GridLayout(0, 1));
-        eastPanel.add(redTopSlider);
-        eastPanel.add(SEPARATOR);
-        eastPanel.add(redBottomSlider);
-        
-        //canvas.add(gridComponent);
         // Add the canvas into the container
         container.add(canvas);
         
         // Add the panels into the container
         container.add(BorderLayout.SOUTH, bottomPanel);
         container.add(BorderLayout.NORTH, topPanel);
-        //container.add(BorderLayout.EAST, eastPanel);
-        container.add(BorderLayout.WEST, westPanel);
-        
         this.setSize(INITIAL_WIDTH, INITIAL_HEIGHT);
 
         // TODO
