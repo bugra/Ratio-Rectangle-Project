@@ -61,6 +61,9 @@ public class MeasureRectangle extends JApplet {
     public int bottomNumerator = 0;
     public int bottomDenominator = 0;
     
+    public Fraction topFraction;
+    public Fraction bottomFraction;
+    
     private double topRatio;
     private double bottomRatio;
     
@@ -231,6 +234,7 @@ public class MeasureRectangle extends JApplet {
         topRectangleMeasure = new JTextField();
         topIterationMeasure = new JTextField();
         topNumeratorField = new JTextField();
+        topFraction = new Fraction();
         topDenominatorComboBox = new JComboBox(DENOMINATOR_VALUES);
         topDenominatorComboBox.addActionListener(new ActionListener() {
 
@@ -437,6 +441,7 @@ public class MeasureRectangle extends JApplet {
         bottomRectangleMeasure = new JTextField();
         bottomNumeratorField = new JTextField();
         bottomDenominatorField = new JTextField();
+        bottomFraction = new Fraction();
         bottomDenominatorComboBox = new JComboBox(DENOMINATOR_VALUES);
         bottomDenominatorComboBox.addActionListener(new ActionListener() {
 
