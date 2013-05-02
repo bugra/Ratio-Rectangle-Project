@@ -445,7 +445,6 @@ public class MeasureRectangle extends JApplet {
             	JComboBox cb = (JComboBox)e.getSource();
                 String denominator = (String)cb.getSelectedItem();
                 updateBottomDenominator(denominator);
-
             }
             
             public void updateBottomDenominator(String denominator){
@@ -744,10 +743,6 @@ public class MeasureRectangle extends JApplet {
 	 		bottomSlider.setToolTipText(String.valueOf(tempSlider.getValue()));
             canvas.repaint();
         }
-    }
-    
-    private static int getGcdNumbers(int a, int b) {
-        return BigInteger.valueOf(a).gcd(BigInteger.valueOf(b)).intValue();
     }
     
     public static void main(String[] args){
