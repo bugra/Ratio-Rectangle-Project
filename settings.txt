@@ -1,3 +1,8 @@
-Asynchronous: 0
+Asynchronous: 1
 Grid: 1
 Student: 1
+h1: 20
+h2: 30
+TopSlider: 0
+BottomSlider: 0
+Fractions: 0

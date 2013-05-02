@@ -11,7 +11,7 @@ import java.util.HashMap;
 public class SettingsReader {
 	private static volatile SettingsReader	instance = null;
 	private static final String FILE_NAME = "settings.txt"; 
-	private static final String SETTINGS = "Asynchronous: 1\nGrid: 1\nStudent: 1";
+	private static final String SETTINGS = "Asynchronous: 1\nGrid: 1\nStudent: 1\nh1: 20\nh2: 30\nTopSlider: 0\nBottomSlider: 0\nFractions: 0";
 	private static final String DELIMETER = ":";
 	private static HashMap<String, Integer> settings;
 	
@@ -63,7 +63,11 @@ public class SettingsReader {
 		}
 		if(settings.containsKey("Grid") & settings.containsKey("Asynchronous")){
 			if((settings.get("Grid") == 0 | settings.get("Grid") == 1 ) & 
-			   (settings.get("Asynchronous") == 1 | settings.get("Asynchronous") == 0)){
+			   (settings.get("Asynchronous") == 1 | settings.get("Asynchronous") == 0) &
+			   (settings.get("Student") == 1 | settings.get("Student") == 0) & 
+			   (settings.get("TopSlider") == 1 | settings.get("TopSlider") == 0) &
+			   (settings.get("BottomSlider") == 1 | settings.get("BottomSlider") == 0) &
+			   (settings.get("Fractions") == 1 | settings.get("Fractions") == 0)){
 				validate = true;
 			}else{
 				createFile();

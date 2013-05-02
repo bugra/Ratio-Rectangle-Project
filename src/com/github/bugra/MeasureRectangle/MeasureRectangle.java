@@ -14,12 +14,14 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.font.NumericShaper;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 
 import javax.swing.JApplet;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
@@ -54,10 +56,10 @@ public class MeasureRectangle extends JApplet {
     JTextField bottomNumeratorField;
     JTextField bottomDenominatorField;
     
-    private int topNumerator = 0;
-    private double topDenominator = 0;
-    private int bottomNumerator = 0;
-    private double bottomDenominator = 0;
+    public int topNumerator = 0;
+    public int topDenominator = 0;
+    public int bottomNumerator = 0;
+    public int bottomDenominator = 0;
     
     private double topRatio;
     private double bottomRatio;
@@ -124,6 +126,10 @@ public class MeasureRectangle extends JApplet {
     
     private final int INITIAL_WIDTH = 800;
     private final int INITIAL_HEIGHT = 600;
+    
+    private final String[] DENOMINATOR_VALUES = {" ", "1", "2", "3", "4", "6", "12" };
+    JComboBox topDenominatorComboBox;
+    JComboBox bottomDenominatorComboBox;
     
     public static final int MAJOR_TICK_SPACING = 1;
     public static final int MINOR_TICK_SPACING = 1;
@@ -225,6 +231,22 @@ public class MeasureRectangle extends JApplet {
         topRectangleMeasure = new JTextField();
         topIterationMeasure = new JTextField();
         topNumeratorField = new JTextField();
+        topDenominatorComboBox = new JComboBox(DENOMINATOR_VALUES);
+        topDenominatorComboBox.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e)
+            {
+            	JComboBox cb = (JComboBox)e.getSource();
+                String denominator = (String)cb.getSelectedItem();
+                updateTopDenominator(denominator);
+
+            }
+            
+            public void updateTopDenominator(String denominator){
+            	topDenominator = denominator.equalsIgnoreCase(" ") ? 0: Integer.valueOf(denominator) ;
+            	
+            }
+        });
         topDenominatorField = new JTextField();
         topUndoManager = new UndoManager();
         topIterationMeasure.getDocument().addUndoableEditListener(topUndoManager);
@@ -373,7 +395,7 @@ public class MeasureRectangle extends JApplet {
 				topRatio = topNumerator / topDenominator;
 			}
         });
-        
+        /*
         topDenominatorField.getDocument().addDocumentListener(new DocumentListener() {
 			public void changedUpdate(DocumentEvent arg0) {
 				if (topDenominatorField.getText() == null | topDenominatorField.getText().equals(" ")){
@@ -410,12 +432,26 @@ public class MeasureRectangle extends JApplet {
 				System.out.println(topDenominator);
 				System.out.println(topRatio);
 			}
-        });
+        });*/
         
         bottomRectangleMeasure = new JTextField();
         bottomNumeratorField = new JTextField();
         bottomDenominatorField = new JTextField();
-        
+        bottomDenominatorComboBox = new JComboBox(DENOMINATOR_VALUES);
+        bottomDenominatorComboBox.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e)
+            {
+            	JComboBox cb = (JComboBox)e.getSource();
+                String denominator = (String)cb.getSelectedItem();
+                updateBottomDenominator(denominator);
+
+            }
+            
+            public void updateBottomDenominator(String denominator){
+            	bottomDenominator = denominator.equalsIgnoreCase(" ") ? 0: Integer.valueOf(denominator) ;
+            }
+        });   
         bottomIterationMeasure = new JTextField();
         bottomUndoManager = new UndoManager();
         bottomIterationMeasure.getDocument().addUndoableEditListener(bottomUndoManager);
@@ -563,41 +599,35 @@ public class MeasureRectangle extends JApplet {
         c.gridx = 0;
         c.gridy = 0;
         topPanel.add(topRectangleMeasure, c);
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.weightx = 0.1;
-        c.gridx = 1;
-        c.gridy = 0;
-        topPanel.add(topIterationMeasure, c);
         c.fill = GridBagConstraints.NORTH;
         c.weightx = 0.1;
         c.weighty = 0.1;
         c.ipadx = 20;
-        c.gridx = 2;
+        c.gridx = 1;
         c.gridy = 0;
         topPanel.add(topNumeratorField,c);
-        c.fill = GridBagConstraints.SOUTH;
+        c.fill = GridBagConstraints.NORTH;
         c.weightx = 0.1;
         c.weighty = 0.1;
         c.ipadx = 20;
-        c.gridx = 3;
-        c.gridy = 0;
-        topPanel.add(topDenominatorField,c);
+        c.gridx = 1;
+        c.gridy = 1;
+        topPanel.add(topDenominatorComboBox,c);
         c.fill = GridBagConstraints.HORIZONTAL;
         c.weightx = 0.2;
-        c.gridx = 4;
+        c.gridx = 2;
         c.gridy = 0;
         topPanel.add(topUndoButton, c);
         c.fill = GridBagConstraints.HORIZONTAL;
-        c.ipady = 40;      //make this component tall
+        c.ipady = 20;     
         c.weightx = 0.0;
         c.gridwidth = 5;
         c.gridx = 0;
         c.gridy = 2;
         topPanel.add(topSlider, c);
-        
         bottomPanel.setLayout(new GridBagLayout());
         c.fill = GridBagConstraints.HORIZONTAL;
-        c.ipady = 40;      //make this component tall
+        c.ipady = 40;     
         c.weightx = 0.0;
         c.gridwidth = 3;
         c.gridx = 0;
@@ -608,31 +638,35 @@ public class MeasureRectangle extends JApplet {
         c.gridwidth = 1;
         c.weightx = 0.5;
         c.gridx = 0;
-        c.gridy = 1;
+        c.gridy = 2;
         bottomPanel.add(bottomRectangleMeasure, c);
         c.fill = GridBagConstraints.HORIZONTAL;
         c.weightx = 0.5;
         c.gridx = 1;
         c.gridy = 1;
-        bottomPanel.add(bottomIterationMeasure, c);
+        bottomPanel.add(bottomNumeratorField, c);
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx = 0.5;
+        c.gridx = 1;
+        c.gridy = 2;
+        c.gridwidth = 1;
+        bottomPanel.add(bottomDenominatorComboBox, c);
         c.fill = GridBagConstraints.HORIZONTAL;
         c.weightx = 0.2;
         c.gridx = 2;
-        c.gridy = 1;
+        c.gridy = 2;
         bottomPanel.add(bottomUndoButton, c);
         
         // Add the canvas into the container
         container.add(canvas);
+        
         
         // Add the panels into the container
         container.add(BorderLayout.SOUTH, bottomPanel);
         container.add(BorderLayout.NORTH, topPanel);
         this.setSize(INITIAL_WIDTH, INITIAL_HEIGHT);
 
-        // TODO
-        // GRID
-        Grids grid = new Grids(200, 200, 5, 10);
-	    add(grid);
+        
         
         this.addComponentListener(new ComponentAdapter() {
         	  public void componentResized(ComponentEvent event) {
@@ -710,6 +744,10 @@ public class MeasureRectangle extends JApplet {
 	 		bottomSlider.setToolTipText(String.valueOf(tempSlider.getValue()));
             canvas.repaint();
         }
+    }
+    
+    private static int getGcdNumbers(int a, int b) {
+        return BigInteger.valueOf(a).gcd(BigInteger.valueOf(b)).intValue();
     }
     
     public static void main(String[] args){
