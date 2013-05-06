@@ -17,6 +17,14 @@ class Grids extends Canvas {
 	    this.hInvisible = false;
 	  }
 	  
+	  Grids(int w, int h, int r, int c, boolean wInv, boolean hInv) {
+		    setSize(width = w, height = h);
+		    rows = r;
+		    columns = c;
+		    this.wInvisible = wInv;
+		    this.hInvisible = hInv;
+		  }
+	  
 	    public void paint(Graphics g) {
 	    int k;
 	    
@@ -49,5 +57,6 @@ class Grids extends Canvas {
 	}
 	public static void main(String[] args) {
 	    new DrawGrids("Draw Grids", 200, 200, 2, 10).setVisible(true);
+	    
 	  }
 	}
