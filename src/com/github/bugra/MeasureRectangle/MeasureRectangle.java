@@ -12,9 +12,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.font.NumericShaper;
 import java.io.IOException;
-import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 
@@ -71,9 +69,6 @@ public class MeasureRectangle extends JApplet {
     JSlider topSlider;
     JSlider bottomSlider;
     
-    JCheckBox topCheckBox;
-    JCheckBox bottomCheckBox;
-    
     JLabel topLabel;
     
     int xPosition;
@@ -113,10 +108,12 @@ public class MeasureRectangle extends JApplet {
     public static final Dimension WEST_PANEL_SIZE = new Dimension(50, 50);
     
     private int MIN_SLIDER = 0;
-    private int MAX_SLIDER;
+    private int MAX_SLIDER = 120;
     private int TOP_INITIAL_SLIDER;
     private int BOTTOM_INITIAL_SLIDER;
+    
     public int commonFactor;
+    public int spacing;
     
     
     private int TOTAL_RANGE;
@@ -169,20 +166,18 @@ public class MeasureRectangle extends JApplet {
         topRectangleMeasure.setText(INITIAL_VALUE_LABEL);
         topRectangleMeasure.setText(String.valueOf(topRectangleValue));
         
-
         bottomRectangleMeasure = new JTextField(String.valueOf(bottomRectangleValue));
         bottomNumeratorField = new JTextField();
         bottomDenominatorField = new JTextField();
         bottomFraction = new Fraction();
         bottomDenominatorComboBox = new JComboBox(DENOMINATOR_VALUES);
         
-        
         commonFactor = Fraction.getGcdNumbers((int)topRectangleValue, (int) bottomRectangleValue);
-        TOP_INITIAL_SLIDER = (int) (topRectangleValue / commonFactor) * MAJOR_TICK_SPACING;
-        BOTTOM_INITIAL_SLIDER = (int) (bottomRectangleValue / commonFactor) * MAJOR_TICK_SPACING;
+        spacing = MAX_SLIDER/ commonFactor;
+        TOP_INITIAL_SLIDER = (int) (topRectangleValue / commonFactor) * 10;
+        BOTTOM_INITIAL_SLIDER = (int) (bottomRectangleValue / commonFactor) * 10;
         
-        MAX_SLIDER = commonFactor * MAJOR_TICK_SPACING;
-        System.out.println(topRectangleValue);
+        System.out.println(TOP_INITIAL_SLIDER);
         topRectangleValue *= MAJOR_TICK_SPACING;
     	bottomRectangleValue *= MAJOR_TICK_SPACING;
     	
@@ -195,22 +190,9 @@ public class MeasureRectangle extends JApplet {
         bottomSlider = new JSlider(JSlider.HORIZONTAL, MIN_SLIDER, 
         									MAX_SLIDER, BOTTOM_INITIAL_SLIDER);
         
-        
         bottomSlider.setPreferredSize( INITIAL_SLIDER_DIMENSION );
         bottomTextField = new JTextField(Double.toString((double) BOTTOM_INITIAL_SLIDER / MAX_SLIDER), 
         									LENGTH_OF_TEXT_FIELD);
-        bottomCheckBox =  new JCheckBox();
-        bottomCheckBox.addItemListener(
-        		new ItemListener() {
-					public void itemStateChanged(ItemEvent e) {
-						if (e.getStateChange() == ItemEvent.SELECTED){
-							bottomTextField.setVisible(false);
-						}
-						else{
-							bottomTextField.setVisible(true);
-						}
-					}
-				});
 
         topPanel = new JPanel();
         TitledBorder topBorder = new TitledBorder("Quantity A");
@@ -233,25 +215,20 @@ public class MeasureRectangle extends JApplet {
         topSlider.setMajorTickSpacing(MAJOR_TICK_SPACING);
         topSlider.setMinorTickSpacing(MINOR_TICK_SPACING);
         //topSlider.setPaintLabels(true);
-        topSlider.setPaintTicks(true);
-        topSlider.setPaintTrack(true);
+        //topSlider.setPaintTicks(true);
+        //topSlider.setPaintTrack(true);
         //topSlider.setSnapToTicks(true);
+        bottomSlider.setPreferredSize(INITIAL_SLIDER_DIMENSION);
+        bottomSlider.setToolTipText(Integer.toString(topSlider.getValue()));
         
+        bottomSlider.setMajorTickSpacing(MAJOR_TICK_SPACING);
+        bottomSlider.setMinorTickSpacing(MINOR_TICK_SPACING);
+        //bottomSlider.setPaintLabels(true);
+        bottomSlider.setPaintTicks(true);
+        bottomSlider.setPaintTrack(true);
         topTextField = new JTextField(Double.toString((double) TOP_INITIAL_SLIDER / MAX_SLIDER), 
         									LENGTH_OF_TEXT_FIELD);
         topTextField = new JTextField(Double.toString(TOP_INITIAL_SLIDER), LENGTH_OF_TEXT_FIELD);
-        
-        topCheckBox =  new JCheckBox();
-        topCheckBox.addItemListener(
-        		new ItemListener() {
-					public void itemStateChanged(ItemEvent e) {
-						if (e.getStateChange() == ItemEvent.SELECTED){
-							topTextField.setVisible(false);
-						}else{
-							topTextField.setVisible(true);
-						}
-					}
-				});
         
         // INITIALIZATION of the components
         tempWidth = (int) (bottomSlider.getValue() / (double)MAX_SLIDER);
@@ -260,7 +237,6 @@ public class MeasureRectangle extends JApplet {
  		canvas.setBottomRectangleWidth((int) ((canvas.getWidthCanvas() - 
 					(2 * RectanglesCanvas.posXTopRectangle)) * tempWidth));
  		
-
         topDenominatorComboBox.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e)

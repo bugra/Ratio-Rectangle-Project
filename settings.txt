@@ -1,8 +1,9 @@
-Asynchronous: 1
+Asynchronous: 0
 Grid: 1
 Student: 1
-h1: 20
-h2: 30
+h1: 30
+h2: 20
+number_of_iterations: 10
 TopSlider: 0
 BottomSlider: 0
 Fractions: 0
