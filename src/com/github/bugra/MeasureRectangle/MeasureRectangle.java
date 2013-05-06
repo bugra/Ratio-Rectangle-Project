@@ -102,8 +102,8 @@ public class MeasureRectangle extends JApplet {
     public static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#.##");
     public static final JSeparator SEPARATOR = new JSeparator(SwingConstants.VERTICAL);
     
-    private double topRectangleValue = INITIAL_TOP_RECTANGLE_VALUE;
-    private double bottomRectangleValue = INITIAL_BOTTOM_RECTANGLE_VALUE;
+    private double topRectangleValue;
+    private double bottomRectangleValue;
     
     private UndoManager topUndoManager;
     private UndoManager bottomUndoManager;
@@ -112,12 +112,15 @@ public class MeasureRectangle extends JApplet {
     
     public static final Dimension WEST_PANEL_SIZE = new Dimension(50, 50);
     
-    private final int MIN_SLIDER = 0;
-    private final int MAX_SLIDER = 120;
-    private final int INITIAL_SLIDER = 1;
+    private int MIN_SLIDER = 0;
+    private int MAX_SLIDER;
+    private int TOP_INITIAL_SLIDER;
+    private int BOTTOM_INITIAL_SLIDER;
+    public int commonFactor;
     
-    private final int TOTAL_RANGE = TOP_LABEL_MAX_VALUE - TOP_LABEL_MIN_VALUE;
-	private final double LABEL_MOVEMENT_VALUE = TOTAL_RANGE / (double)MAX_SLIDER;
+    
+    private int TOTAL_RANGE;
+	private double LABEL_MOVEMENT_VALUE;
     
     private final int INITIAL_WIDTH = 800;
     private final int INITIAL_HEIGHT = 600;
@@ -137,6 +140,7 @@ public class MeasureRectangle extends JApplet {
     private boolean asynchronous; 
 
     public void init() {
+    	
     	// Initialization for Options
     	SettingsReader sr = SettingsReader.getInstance();
 		HashMap<String, Integer> settings = new HashMap<String, Integer>();
@@ -149,6 +153,39 @@ public class MeasureRectangle extends JApplet {
     	asynchronous = settings.get("Asynchronous") == 1 ? true:false;
     	System.out.println(asynchronous);
     	
+    	topRectangleValue = settings.get("h1");
+    	bottomRectangleValue = settings.get("h2");
+    	
+    	TOTAL_RANGE = TOP_LABEL_MAX_VALUE - TOP_LABEL_MIN_VALUE;
+    	LABEL_MOVEMENT_VALUE = TOTAL_RANGE / (double)MAX_SLIDER;
+    	
+        topRectangleMeasure = new JTextField();
+        topNumeratorField = new JTextField();
+        topFraction = new Fraction();
+        topDenominatorComboBox = new JComboBox(DENOMINATOR_VALUES);
+        topDenominatorField = new JTextField();
+        topUndoManager = new UndoManager();
+        topRectangleMeasure.getDocument().addUndoableEditListener(topUndoManager);
+        topRectangleMeasure.setText(INITIAL_VALUE_LABEL);
+        topRectangleMeasure.setText(String.valueOf(topRectangleValue));
+        
+
+        bottomRectangleMeasure = new JTextField(String.valueOf(bottomRectangleValue));
+        bottomNumeratorField = new JTextField();
+        bottomDenominatorField = new JTextField();
+        bottomFraction = new Fraction();
+        bottomDenominatorComboBox = new JComboBox(DENOMINATOR_VALUES);
+        
+        
+        commonFactor = Fraction.getGcdNumbers((int)topRectangleValue, (int) bottomRectangleValue);
+        TOP_INITIAL_SLIDER = (int) (topRectangleValue / commonFactor) * MAJOR_TICK_SPACING;
+        BOTTOM_INITIAL_SLIDER = (int) (bottomRectangleValue / commonFactor) * MAJOR_TICK_SPACING;
+        
+        MAX_SLIDER = commonFactor * MAJOR_TICK_SPACING;
+        System.out.println(topRectangleValue);
+        topRectangleValue *= MAJOR_TICK_SPACING;
+    	bottomRectangleValue *= MAJOR_TICK_SPACING;
+    	
     	container = getContentPane();
         canvas = new RectanglesCanvas();
         
@@ -156,11 +193,11 @@ public class MeasureRectangle extends JApplet {
         TitledBorder southBorder = new TitledBorder("Quantity B");
         bottomPanel.setBorder(southBorder);
         bottomSlider = new JSlider(JSlider.HORIZONTAL, MIN_SLIDER, 
-        									MAX_SLIDER, INITIAL_SLIDER);
+        									MAX_SLIDER, BOTTOM_INITIAL_SLIDER);
         
         
         bottomSlider.setPreferredSize( INITIAL_SLIDER_DIMENSION );
-        bottomTextField = new JTextField(Double.toString((double) INITIAL_SLIDER / MAX_SLIDER), 
+        bottomTextField = new JTextField(Double.toString((double) BOTTOM_INITIAL_SLIDER / MAX_SLIDER), 
         									LENGTH_OF_TEXT_FIELD);
         bottomCheckBox =  new JCheckBox();
         bottomCheckBox.addItemListener(
@@ -181,7 +218,7 @@ public class MeasureRectangle extends JApplet {
         topLabel = new JLabel("",SwingConstants.CENTER);
         topLabel.setText("Label");
         topSlider = new JSlider(JSlider.HORIZONTAL, MIN_SLIDER, 
-        								MAX_SLIDER, INITIAL_SLIDER);
+        								MAX_SLIDER, TOP_INITIAL_SLIDER);
         
         if(asynchronous){
         	topSlider.addChangeListener(new AsynchronousTopSliderListener());
@@ -200,9 +237,9 @@ public class MeasureRectangle extends JApplet {
         topSlider.setPaintTrack(true);
         //topSlider.setSnapToTicks(true);
         
-        topTextField = new JTextField(Double.toString((double) INITIAL_SLIDER / MAX_SLIDER), 
+        topTextField = new JTextField(Double.toString((double) TOP_INITIAL_SLIDER / MAX_SLIDER), 
         									LENGTH_OF_TEXT_FIELD);
-        topTextField = new JTextField(Double.toString(INITIAL_SLIDER), LENGTH_OF_TEXT_FIELD);
+        topTextField = new JTextField(Double.toString(TOP_INITIAL_SLIDER), LENGTH_OF_TEXT_FIELD);
         
         topCheckBox =  new JCheckBox();
         topCheckBox.addItemListener(
@@ -223,10 +260,7 @@ public class MeasureRectangle extends JApplet {
  		canvas.setBottomRectangleWidth((int) ((canvas.getWidthCanvas() - 
 					(2 * RectanglesCanvas.posXTopRectangle)) * tempWidth));
  		
-        topRectangleMeasure = new JTextField();
-        topNumeratorField = new JTextField();
-        topFraction = new Fraction();
-        topDenominatorComboBox = new JComboBox(DENOMINATOR_VALUES);
+
         topDenominatorComboBox.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e)
@@ -240,13 +274,9 @@ public class MeasureRectangle extends JApplet {
             public void updateTopDenominator(String denominator){
             	topDenominator = denominator.equalsIgnoreCase(" ") ? 0: Integer.valueOf(denominator) ;
             	topFraction.setDenominator(topDenominator);
-            	
             }
         });
-        topDenominatorField = new JTextField();
-        topUndoManager = new UndoManager();
-        topRectangleMeasure.getDocument().addUndoableEditListener(topUndoManager);
-        topRectangleMeasure.setText(INITIAL_VALUE_LABEL);
+
         
         topRectangleMeasure.getDocument().addDocumentListener(new DocumentListener() {
         	  public void changedUpdate(DocumentEvent e) {
@@ -349,6 +379,21 @@ public class MeasureRectangle extends JApplet {
 				topFraction.setNumerator(topNumerator);
 			}
         });
+
+        bottomDenominatorComboBox.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e)
+            {
+            	JComboBox cb = (JComboBox)e.getSource();
+                String denominator = (String)cb.getSelectedItem();
+                updateBottomDenominator(denominator);
+            }
+            
+            public void updateBottomDenominator(String denominator){
+            	bottomDenominator = denominator.equalsIgnoreCase(" ") ? 0: Integer.valueOf(denominator) ;
+            	bottomFraction.setDenominator(bottomDenominator);
+            }
+        });   
         
         bottomNumeratorField.getDocument().addDocumentListener(new DocumentListener() {
 			public void changedUpdate(DocumentEvent arg0) {
@@ -379,28 +424,8 @@ public class MeasureRectangle extends JApplet {
 			}
         });
         
-        bottomRectangleMeasure = new JTextField();
-        bottomNumeratorField = new JTextField();
-        bottomDenominatorField = new JTextField();
-        bottomFraction = new Fraction();
-        bottomDenominatorComboBox = new JComboBox(DENOMINATOR_VALUES);
-        bottomDenominatorComboBox.addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent e)
-            {
-            	JComboBox cb = (JComboBox)e.getSource();
-                String denominator = (String)cb.getSelectedItem();
-                updateBottomDenominator(denominator);
-            }
-            
-            public void updateBottomDenominator(String denominator){
-            	bottomDenominator = denominator.equalsIgnoreCase(" ") ? 0: Integer.valueOf(denominator) ;
-            }
-        });   
         bottomUndoManager = new UndoManager();
         bottomRectangleMeasure.getDocument().addUndoableEditListener(bottomUndoManager);
-        bottomRectangleMeasure.setText(INITIAL_VALUE_LABEL);
-        
         bottomRectangleMeasure.getDocument().addDocumentListener(new DocumentListener() {
         	  public void changedUpdate(DocumentEvent e) {
         		  if (bottomRectangleMeasure.getText() == null | bottomRectangleMeasure.getText().equals(" ")){
