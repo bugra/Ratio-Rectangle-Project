@@ -45,11 +45,17 @@ public class Fraction {
 	public int getNumerator(){ return numerator; }
 	public int getDenominator(){ return denominator; }
 	public int getNum(){ 
-		return  whole + (numerator / getGcdNumbers(numerator, denominator));
+		if(this.denominator == DEFAULT_DENOMINATOR)
+			return whole;
+		else
+			return  whole + (numerator / getGcdNumbers(numerator, denominator));
 	}
 	public int getDen(){
-		return (denominator / getGcdNumbers(numerator, denominator));
-	}
+		if(this.denominator == DEFAULT_DENOMINATOR)
+			return DEFAULT_DENOMINATOR;
+		else
+			return (denominator / getGcdNumbers(numerator, denominator));
+	}		
 	
 	// Setter Methods
 	public void setWhole(int w){ this.whole = w; }
@@ -60,6 +66,13 @@ public class Fraction {
 	
 	public double getDoubleValue(){
 		return  (double) whole +  (numerator / (double) denominator);
+	}
+	
+	public double getFractionPart(){
+		if(this.denominator == DEFAULT_DENOMINATOR)
+			return 0;
+		else
+			return numerator / (double) denominator;
 	}
 	
 	// Greatest Common Divisor
