@@ -62,9 +62,6 @@ public class MeasureRectangle extends JApplet {
     public Fraction topFraction;
     public Fraction bottomFraction;
     
-    private double topRatio;
-    private double bottomRatio;
-    
     JButton topUndoButton;
     JButton bottomUndoButton;
     
@@ -108,9 +105,6 @@ public class MeasureRectangle extends JApplet {
     private double topRectangleValue = INITIAL_TOP_RECTANGLE_VALUE;
     private double bottomRectangleValue = INITIAL_BOTTOM_RECTANGLE_VALUE;
     
-    private double topIterationValue;
-    private double bottomIterationValue;
-    
     private UndoManager topUndoManager;
     private UndoManager bottomUndoManager;
     
@@ -119,7 +113,7 @@ public class MeasureRectangle extends JApplet {
     public static final Dimension WEST_PANEL_SIZE = new Dimension(50, 50);
     
     private final int MIN_SLIDER = 0;
-    private final int MAX_SLIDER = 100;
+    private final int MAX_SLIDER = 120;
     private final int INITIAL_SLIDER = 1;
     
     private final int TOTAL_RANGE = TOP_LABEL_MAX_VALUE - TOP_LABEL_MIN_VALUE;
@@ -132,7 +126,7 @@ public class MeasureRectangle extends JApplet {
     JComboBox topDenominatorComboBox;
     JComboBox bottomDenominatorComboBox;
     
-    public static final int MAJOR_TICK_SPACING = 1;
+    public static final int MAJOR_TICK_SPACING = 12;
     public static final int MINOR_TICK_SPACING = 1;
     
     private final Dimension INITIAL_SLIDER_DIMENSION = new Dimension(710, 50);
@@ -199,11 +193,11 @@ public class MeasureRectangle extends JApplet {
         topSlider.setPreferredSize(INITIAL_SLIDER_DIMENSION);
         topSlider.setToolTipText(Integer.toString(topSlider.getValue()));
         
-        //topSlider.setMajorTickSpacing(MAJOR_TICK_SPACING);
-        //topSlider.setMinorTickSpacing(MINOR_TICK_SPACING);
+        topSlider.setMajorTickSpacing(MAJOR_TICK_SPACING);
+        topSlider.setMinorTickSpacing(MINOR_TICK_SPACING);
         //topSlider.setPaintLabels(true);
-        //topSlider.setPaintTicks(true);
-        //topSlider.setPaintTrack(true);
+        topSlider.setPaintTicks(true);
+        topSlider.setPaintTrack(true);
         //topSlider.setSnapToTicks(true);
         
         topTextField = new JTextField(Double.toString((double) INITIAL_SLIDER / MAX_SLIDER), 
@@ -333,9 +327,8 @@ public class MeasureRectangle extends JApplet {
 					topNumerator = 0;
 				}else{ 
 					topNumerator = Integer.parseInt(topNumeratorField.getText());
-					topFraction.setNumerator(topNumerator);
 				}
-				topRatio = topNumerator / topDenominator;
+				topFraction.setNumerator(topNumerator);
 			}
 
 			public void insertUpdate(DocumentEvent arg0) {
@@ -343,10 +336,8 @@ public class MeasureRectangle extends JApplet {
 					topNumerator = 0;
 				}else{ 
 					topNumerator = Integer.parseInt(topNumeratorField.getText());
-					topFraction.setNumerator(topNumerator);
 				}
-				
-				topRatio = topNumerator / topDenominator;
+				topFraction.setNumerator(topNumerator);
 			}
 
 			public void removeUpdate(DocumentEvent arg0) throws NumberFormatException {
@@ -354,9 +345,37 @@ public class MeasureRectangle extends JApplet {
 					topNumerator = 0;
 				}else{ 
 					topNumerator = Integer.parseInt(topNumeratorField.getText());
-					topFraction.setNumerator(topNumerator);
 				}
-				topRatio = topNumerator / topDenominator;
+				topFraction.setNumerator(topNumerator);
+			}
+        });
+        
+        bottomNumeratorField.getDocument().addDocumentListener(new DocumentListener() {
+			public void changedUpdate(DocumentEvent arg0) {
+				if (bottomNumeratorField.getText() == null | bottomNumeratorField.getText().equals(" ")){
+					bottomNumerator = 0;
+				}else{ 
+					bottomNumerator = Integer.parseInt(bottomNumeratorField.getText());
+				}
+				bottomFraction.setNumerator(bottomNumerator);
+			}
+
+			public void insertUpdate(DocumentEvent arg0) {
+				if (bottomNumeratorField.getText() == null | bottomNumeratorField.getText().equals(" ")){
+					bottomNumerator = 0;
+				}else{ 
+					bottomNumerator = Integer.parseInt(bottomNumeratorField.getText());
+				}
+				bottomFraction.setNumerator(bottomNumerator);
+			}
+
+			public void removeUpdate(DocumentEvent arg0) throws NumberFormatException {
+				if (bottomNumeratorField.getText() == null | bottomNumeratorField.getText().equals(" ")){
+					bottomNumerator = 0;
+				}else{ 
+					bottomNumerator = Integer.parseInt(bottomNumeratorField.getText());
+				}
+				bottomFraction.setNumerator(bottomNumerator);
 			}
         });
         
@@ -388,6 +407,7 @@ public class MeasureRectangle extends JApplet {
         			  //bottomRectangleMeasure.setText("0");
         		  }else{
 	        		  bottomRectangleValue = Double.parseDouble(bottomRectangleMeasure.getText());
+	        		  bottomFraction.setWhole((int) bottomRectangleValue);
 	        		  canvas.setBottomRectangleValue(bottomRectangleValue);
 	        		  canvas.setTopRectangleValue(topRectangleValue);
 	        		  canvas.setSizeCanvas(canvas.getSize());
@@ -409,7 +429,8 @@ public class MeasureRectangle extends JApplet {
         		  if (bottomRectangleMeasure.getText() == null | bottomRectangleMeasure.getText().equals(" ")){
         			  //bottomRectangleMeasure.setText("0");
         		  }else{
-	        		  bottomRectangleValue = Double.parseDouble(bottomRectangleMeasure.getText());  
+	        		  bottomRectangleValue = Double.parseDouble(bottomRectangleMeasure.getText());
+	        		  bottomFraction.setWhole((int) bottomRectangleValue);
 	        		  canvas.setBottomRectangleValue(bottomRectangleValue);
 	        		  canvas.setTopRectangleValue(topRectangleValue);
 	        		  canvas.setSizeCanvas(canvas.getSize());
@@ -432,6 +453,7 @@ public class MeasureRectangle extends JApplet {
         			  //bottomRectangleMeasure.setText("0");
         		  }else{
 	        		  bottomRectangleValue = Double.parseDouble(bottomRectangleMeasure.getText());
+	        		  bottomFraction.setWhole((int) bottomRectangleValue);
 	        		  canvas.setBottomRectangleValue(bottomRectangleValue);
 	        		  canvas.setTopRectangleValue(topRectangleValue);
 	        		  canvas.setSizeCanvas(canvas.getSize());
@@ -550,8 +572,6 @@ public class MeasureRectangle extends JApplet {
         container.add(BorderLayout.NORTH, topPanel);
         this.setSize(INITIAL_WIDTH, INITIAL_HEIGHT);
 
-        
-        
         this.addComponentListener(new ComponentAdapter() {
         	  public void componentResized(ComponentEvent event) {
         	     canvas.setSizeCanvas(canvas.getSize());
