@@ -47,14 +47,12 @@ public class MeasureRectangle extends JApplet {
     
     JTextField topRectangleMeasure;
     JTextField bottomRectangleMeasure;
-    JTextField topIterationMeasure;
-    JTextField bottomIterationMeasure;
-    
     
     JTextField topNumeratorField;
     JTextField topDenominatorField;
     JTextField bottomNumeratorField;
     JTextField bottomDenominatorField;
+    
     
     public int topNumerator = 0;
     public int topDenominator = 0;
@@ -232,7 +230,6 @@ public class MeasureRectangle extends JApplet {
 					(2 * RectanglesCanvas.posXTopRectangle)) * tempWidth));
  		
         topRectangleMeasure = new JTextField();
-        topIterationMeasure = new JTextField();
         topNumeratorField = new JTextField();
         topFraction = new Fraction();
         topDenominatorComboBox = new JComboBox(DENOMINATOR_VALUES);
@@ -248,15 +245,14 @@ public class MeasureRectangle extends JApplet {
             
             public void updateTopDenominator(String denominator){
             	topDenominator = denominator.equalsIgnoreCase(" ") ? 0: Integer.valueOf(denominator) ;
+            	topFraction.setDenominator(topDenominator);
             	
             }
         });
         topDenominatorField = new JTextField();
         topUndoManager = new UndoManager();
-        topIterationMeasure.getDocument().addUndoableEditListener(topUndoManager);
-        
+        topRectangleMeasure.getDocument().addUndoableEditListener(topUndoManager);
         topRectangleMeasure.setText(INITIAL_VALUE_LABEL);
-        topIterationMeasure.setText(String.valueOf(INITIAL_TOP_ITERATION_MEASURE));
         
         topRectangleMeasure.getDocument().addDocumentListener(new DocumentListener() {
         	  public void changedUpdate(DocumentEvent e) {
@@ -264,6 +260,7 @@ public class MeasureRectangle extends JApplet {
         			  //topRectangleMeasure.setText("0");
         		  }else{
 	        		  topRectangleValue = Double.parseDouble(topRectangleMeasure.getText());
+	        		  topFraction.setWhole((int)topRectangleValue);
 	        		  canvas.setTopRectangleValue(topRectangleValue);
 	        		  canvas.setBottomRectangleValue(bottomRectangleValue);
 	        		  canvas.setSizeCanvas(canvas.getSize());
@@ -285,7 +282,8 @@ public class MeasureRectangle extends JApplet {
         		  if (topRectangleMeasure.getText() == null | topRectangleMeasure.getText().equals(" ")){
         			  //topRectangleMeasure.setText("0");
         		  }else{
-	        		  topRectangleValue = Double.parseDouble(topRectangleMeasure.getText());  
+	        		  topRectangleValue = Double.parseDouble(topRectangleMeasure.getText());
+	        		  topFraction.setWhole((int)topRectangleValue);
 	        		  canvas.setTopRectangleValue(topRectangleValue);
 	        		  canvas.setBottomRectangleValue(bottomRectangleValue);
 	        		  canvas.setSizeCanvas(canvas.getSize());
@@ -307,7 +305,8 @@ public class MeasureRectangle extends JApplet {
         		  if (topRectangleMeasure.getText() == null | topRectangleMeasure.getText().equals(" ")){
         			  //topRectangleMeasure.setText("0");
         		  }else{
-	        		  topRectangleValue = Double.parseDouble(topRectangleMeasure.getText());  
+	        		  topRectangleValue = Double.parseDouble(topRectangleMeasure.getText()); 
+	        		  topFraction.setWhole((int)topRectangleValue);
 	        		  canvas.setTopRectangleValue(topRectangleValue);
 	        		  canvas.setBottomRectangleValue(bottomRectangleValue);
 	        		  canvas.setSizeCanvas(canvas.getSize());
@@ -326,50 +325,7 @@ public class MeasureRectangle extends JApplet {
         	  }
         	});
         
-        topIterationMeasure.getDocument().addDocumentListener(new DocumentListener() {
-			public void changedUpdate(DocumentEvent arg0) {
-				if (topIterationMeasure.getText() == null | topIterationMeasure.getText().equals(" ")){
-					//topIterationMeasure.setText("0");
-				}else{ 
-					topIterationValue = Double.parseDouble(topIterationMeasure.getText());
-					topIterationValue += topRatio;
-					int width = (int) ((canvas.getWidthCanvas() - 
-							(2 * RectanglesCanvas.posXTopRectangle)) * topIterationValue);
-		    		canvas.setTopRectangleWidth(width/MAX_SLIDER);
-		    		canvas.setBottomRectangleWidth(width/MAX_SLIDER);
-		    		canvas.repaint();
-				}
-			}
-
-			public void insertUpdate(DocumentEvent arg0) {
-				if (topIterationMeasure.getText() == null | topIterationMeasure.getText().equals(" ")){
-					//topIterationMeasure.setText("0");
-				}else{
-					topIterationValue = Double.parseDouble(topIterationMeasure.getText());
-					topIterationValue += topRatio;
-					int width = (int) ((canvas.getWidthCanvas() - 
-							(2 * RectanglesCanvas.posXTopRectangle)) * topIterationValue);
-		    		canvas.setTopRectangleWidth(width/MAX_SLIDER);
-		    		canvas.setBottomRectangleWidth(width/MAX_SLIDER);
-		    		canvas.repaint();
-				}
-			}
-
-			public void removeUpdate(DocumentEvent arg0) throws NumberFormatException {
-				if (topIterationMeasure.getText() == null | topIterationMeasure.getText().equals(" ")){
-					//topIterationMeasure.setText("0");
-				}else{
-					topIterationValue = Double.parseDouble(topIterationMeasure.getText());
-					topIterationValue += topRatio;
-					int width = (int) ((canvas.getWidthCanvas() - 
-							(2 * RectanglesCanvas.posXTopRectangle)) * topIterationValue);
-		    		canvas.setTopRectangleWidth(width/MAX_SLIDER);
-		    		canvas.setBottomRectangleWidth(width/MAX_SLIDER);
-		    		canvas.repaint();
-				}
-			}
-        	
-        });
+        
         
         topNumeratorField.getDocument().addDocumentListener(new DocumentListener() {
 			public void changedUpdate(DocumentEvent arg0) {
@@ -377,6 +333,7 @@ public class MeasureRectangle extends JApplet {
 					topNumerator = 0;
 				}else{ 
 					topNumerator = Integer.parseInt(topNumeratorField.getText());
+					topFraction.setNumerator(topNumerator);
 				}
 				topRatio = topNumerator / topDenominator;
 			}
@@ -386,7 +343,9 @@ public class MeasureRectangle extends JApplet {
 					topNumerator = 0;
 				}else{ 
 					topNumerator = Integer.parseInt(topNumeratorField.getText());
+					topFraction.setNumerator(topNumerator);
 				}
+				
 				topRatio = topNumerator / topDenominator;
 			}
 
@@ -395,48 +354,11 @@ public class MeasureRectangle extends JApplet {
 					topNumerator = 0;
 				}else{ 
 					topNumerator = Integer.parseInt(topNumeratorField.getText());
+					topFraction.setNumerator(topNumerator);
 				}
 				topRatio = topNumerator / topDenominator;
 			}
         });
-        /*
-        topDenominatorField.getDocument().addDocumentListener(new DocumentListener() {
-			public void changedUpdate(DocumentEvent arg0) {
-				if (topDenominatorField.getText() == null | topDenominatorField.getText().equals(" ")){
-					topDenominator = Double.POSITIVE_INFINITY;
-				}else{ 
-					topDenominator = Double.parseDouble(topDenominatorField.getText());
-				}
-				topRatio = topNumerator / topDenominator;
-				System.out.println(topNumerator);
-				System.out.println(topDenominator);
-				System.out.println(topRatio);
-			}
-
-			public void insertUpdate(DocumentEvent arg0) {
-				if (topDenominatorField.getText() == null | topDenominatorField.getText().equals(" ")){
-					topDenominator = Double.POSITIVE_INFINITY;
-				}else{ 
-					topDenominator = Double.parseDouble(topDenominatorField.getText());
-				}
-				topRatio = topNumerator / topDenominator;
-				System.out.println(topNumerator);
-				System.out.println(topDenominator);
-				System.out.println(topRatio);
-			}
-
-			public void removeUpdate(DocumentEvent arg0) throws NumberFormatException {
-				if (topDenominatorField.getText() == null | topDenominatorField.getText().equals(" ")){
-					topDenominator = Double.POSITIVE_INFINITY;
-				}else{ 
-					topDenominator = Double.parseDouble(topDenominatorField.getText());
-				}
-				topRatio = topNumerator / topDenominator;
-				System.out.println(topNumerator);
-				System.out.println(topDenominator);
-				System.out.println(topRatio);
-			}
-        });*/
         
         bottomRectangleMeasure = new JTextField();
         bottomNumeratorField = new JTextField();
@@ -456,12 +378,9 @@ public class MeasureRectangle extends JApplet {
             	bottomDenominator = denominator.equalsIgnoreCase(" ") ? 0: Integer.valueOf(denominator) ;
             }
         });   
-        bottomIterationMeasure = new JTextField();
         bottomUndoManager = new UndoManager();
-        bottomIterationMeasure.getDocument().addUndoableEditListener(bottomUndoManager);
-        
+        bottomRectangleMeasure.getDocument().addUndoableEditListener(bottomUndoManager);
         bottomRectangleMeasure.setText(INITIAL_VALUE_LABEL);
-        bottomIterationMeasure.setText(String.valueOf(INITIAL_BOTTOM_ITERATION_MEASURE));
         
         bottomRectangleMeasure.getDocument().addDocumentListener(new DocumentListener() {
         	  public void changedUpdate(DocumentEvent e) {
@@ -531,46 +450,7 @@ public class MeasureRectangle extends JApplet {
         	  }
         	});
         
-        bottomIterationMeasure.getDocument().addDocumentListener(new DocumentListener() {
-			public void changedUpdate(DocumentEvent arg0) {
-				if (bottomIterationMeasure.getText() == null | bottomIterationMeasure.getText().equals(" ")){
-					//bottomIterationMeasure.setText("0");
-				}else{
-					bottomIterationValue = Double.parseDouble(bottomIterationMeasure.getText());
-					int width = (int) ((canvas.getWidthCanvas() - 
-							(2 * RectanglesCanvas.posXTopRectangle)) * bottomIterationValue);
-		    		canvas.setBottomRectangleWidth(width/MAX_SLIDER);
-		    		canvas.setTopRectangleWidth(width/MAX_SLIDER);
-		    		canvas.repaint();
-				}
-			}
-
-			public void insertUpdate(DocumentEvent arg0) {
-				if (bottomIterationMeasure.getText() == null | bottomIterationMeasure.getText().equals(" ")){
-					//bottomIterationMeasure.setText("0");
-				}else{
-					bottomIterationValue = Double.parseDouble(bottomIterationMeasure.getText());
-					int width = (int) ((canvas.getWidthCanvas() - 
-							(2 * RectanglesCanvas.posXTopRectangle)) * bottomIterationValue);
-		    		canvas.setBottomRectangleWidth(width/MAX_SLIDER);
-		    		canvas.setTopRectangleWidth(width/MAX_SLIDER);
-		    		canvas.repaint();
-				}
-			}
-
-			public void removeUpdate(DocumentEvent arg0) throws NumberFormatException {
-				if (bottomIterationMeasure.getText() == null | bottomIterationMeasure.getText().equals(" ")){
-					//bottomIterationMeasure.setText("0");
-				}else{ 
-					bottomIterationValue = Double.parseDouble(bottomIterationMeasure.getText());
-					int width = (int) ((canvas.getWidthCanvas() - 
-							(2 * RectanglesCanvas.posXTopRectangle)) * bottomIterationValue);
-		    		canvas.setBottomRectangleWidth(width/MAX_SLIDER);
-		    		canvas.setTopRectangleWidth(width/MAX_SLIDER);
-		    		canvas.repaint();
-				}
-			}
-        });
+       
         
         topUndoButton = new JButton(TOP_UNDO_BUTTON_TEXT);
         topUndoButton.addActionListener(new ActionListener() {
@@ -700,7 +580,6 @@ public class MeasureRectangle extends JApplet {
     		tempPoint = new Point(xPosition, TOP_LABEL_Y_POSITION);
     		topLabel.setText(String.valueOf(((JSlider) e.getSource()).getValue()));
     		topLabel.setLocation(tempPoint);
-    		topIterationMeasure.setText(String.valueOf(tempValue));
     		canvas.repaint();
     	}
     	
@@ -721,7 +600,6 @@ public class MeasureRectangle extends JApplet {
 					(2 * RectanglesCanvas.posXTopRectangle)) * tempWidth);
     		canvas.setBottomRectangleWidth(width);
     		bottomSlider.setToolTipText(String.valueOf(tempValue));
-    		bottomIterationMeasure.setText(String.valueOf(tempValue));
     		canvas.repaint();
     	}
     }
