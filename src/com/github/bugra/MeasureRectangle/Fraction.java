@@ -14,10 +14,12 @@ public class Fraction {
 	public int num;
 	public int den;
 	
+	public static int DEFAULT_DENOMINATOR = 65536;
+	
 	public Fraction(){
 		this.whole = 0;
 		this.numerator = 0;
-		this.denominator = 1;
+		this.denominator = DEFAULT_DENOMINATOR;
 		this.num = 0;
 		this.den = 1;
 	}
